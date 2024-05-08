@@ -3,6 +3,9 @@ import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
+import { connectWithRetry } from './db.js';
+
+connectWithRetry();
 
 // Creamos una nueva instancia del cliente
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
