@@ -32,7 +32,12 @@ async function execute(interaction) {
         .addFields(
             { name: 'Entrenador', value: userInfo.trainerName || "n/a", inline: true },
             { name: '\u200B', value: '\u200B' },
-            { name: 'Medallas', value: userInfo.medals ? userInfo.medals.join(', ') : "n/a", inline: true },)
+            { 
+                name: 'Medallas', 
+                value: userInfo.medals && userInfo.medals.length > 0 ? userInfo.medals.join(', ') : "n/a", 
+                inline: true 
+            }        
+        )
         .setImage(avatarURL)
         .setTimestamp()
 
