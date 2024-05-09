@@ -27,7 +27,7 @@ const medallas = [
 // Cargar imágenes de medallas
 const medallaSilueta = await loadImage('https://images.wikidexcdn.net/mwuploads/wikidex/0/09/latest/20180812034547/Medalla_Arco%C3%ADris.png'); // Ruta de la imagen de la silueta de la medalla
 const medallaColor = await loadImage('https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png'); // Ruta de la imagen de la medalla en color
-const medallasConseguidas = [true, false, false, false, false, false, false, false];
+const medallasConseguidas = [true, false, false, false, false, false, true, false];
 
 // Dibujar las medallas en el lienzo
 medallas.forEach((medalla, index) => {

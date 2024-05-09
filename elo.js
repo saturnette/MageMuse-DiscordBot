@@ -25,16 +25,7 @@ class Player {
       this.gamesPlayed++;
     }
   
-    decayElo() {
-      if (this.gamesPlayed > 5) return;
-      let decay = 0;
-      if (this.elo > 1500) {
-        decay = Math.floor((this.elo - 1500) / 100);
-      } else if (this.elo > 1400) {
-        decay = Math.floor((this.elo - 1400) / 50);
-      }
-      this.elo = Math.max(1000, this.elo - decay);
-    }
+
   }
 
   // Crea instancias de la clase Player para cada jugador
