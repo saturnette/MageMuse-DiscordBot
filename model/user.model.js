@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
     _id: String, // ID del usuario
     trainerName: String, // Nombre del usuario
+    showdownNick: String, // Nick en showdown
     medals: [String], // Lista de medallas
 });
 

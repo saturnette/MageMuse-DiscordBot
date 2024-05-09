@@ -1,12 +1,11 @@
 import User from "../../model/user.model.js";
 
-
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 const data = new SlashCommandBuilder()
     .setName('userinfomedal')
     .setDescription('Get information about a user!')
-    .addUserOption(option => 
+    .addUserOption(option =>
         option.setName('user')
             .setDescription('The user to get information about')
             .setRequired(true));
@@ -15,11 +14,29 @@ async function execute(interaction) {
     // Obtenemos el objeto User del parámetro 'user'
     const user = interaction.options.getUser('user');
 
+    console.log(user);
     // Obtenemos la información del usuario
     const userInfo = await getUserInfo(user.id);
 
+    console.log(userInfo);
     // Respondemos a la interacción con la información del usuario
-    await interaction.reply(userInfo || 'User not found.');
+    // await interaction.reply(userInfo || 'User not found.');
+    const avatarURL = user.displayAvatarURL({ format: 'png', dynamic: true });
+
+    const exampleEmbed = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Medallero')
+        .setURL('https://discord.js.org/')
+        .setAuthor({ name: 'Pueblo Paleta', iconURL: 'https://i.imgur.com/AfFp7pu.png', url: 'https://discord.js.org' })
+        .setThumbnail(avatarURL)
+        .addFields(
+            { name: 'Entrenador', value: userInfo.trainerName || "n/a", inline: true },
+            { name: '\u200B', value: '\u200B' },
+            { name: 'Medallas', value: userInfo.medals ? userInfo.medals.join(', ') : "n/a", inline: true },)
+        .setImage(avatarURL)
+        .setTimestamp()
+
+    await interaction.reply({ embeds: [exampleEmbed] });
 }
 
 
@@ -31,7 +48,8 @@ async function getUserInfo(userId) {
     if (!user) return null;
 
     // Devuelve la información del usuario
-return `Entrenador: ${user.trainerName}\nMedals: ${user.medals.join(', ')}`;}
+    return user;
+}
 
 export default {
     data,
