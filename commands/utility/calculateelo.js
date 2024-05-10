@@ -21,6 +21,10 @@ async function execute(interaction) {
     // Obtenemos el objeto User del parámetro 'loser'
     const loser = interaction.options.getUser('loser');
 
+    if (winner.id === loser.id) {
+        await interaction.reply('The winner and the loser cannot be the same user.');
+        return;
+    }
     // Actualizamos el Elo de los usuarios
     try {
         const winnerUser = await User.findOneAndUpdate({ _id: winner.id }, { $setOnInsert: { elo: 1000, trainerName: winner.username } }, { upsert: true, new: true });

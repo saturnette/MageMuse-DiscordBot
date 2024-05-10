@@ -1,9 +1,15 @@
 import User from "../../model/user.model.js";
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { createCanvas, loadImage } from 'canvas';
 import fetch from 'node-fetch';
-import { AttachmentBuilder } from 'discord.js';
 import sharp from 'sharp';
+import bucket from '../../firebase.js';
+import { createReadStream } from 'streamifier';
+import 'dotenv/config';
+
+
+
+
 
 const data = new SlashCommandBuilder()
     .setName('getelos')
@@ -12,6 +18,7 @@ const data = new SlashCommandBuilder()
 async function execute(interaction) {
     // Busca todos los usuarios en la base de datos y los ordena por Elo de mayor a menor
     const users = await User.find().sort({ elo: -1 });
+    await interaction.reply({ content: 'Calculando elo...', fetchReply: true });
 
     // Define el tamaño del canvas
     const canvasWidth = 700;
@@ -71,6 +78,9 @@ async function execute(interaction) {
         } else if (i === 2) {
             // Bronze for 3rd place
             context.fillStyle = 'darkorange';
+        } else if (i === 3) {
+            // Bronze for 3rd place
+            context.fillStyle = 'green';
         } else {
             // White for other places
             context.fillStyle = 'white';
@@ -89,11 +99,31 @@ async function execute(interaction) {
     // Convert the canvas to a buffer
     const buffer = canvas.toBuffer();
 
-    // Create an attachment with the buffer
-    const attachment = new AttachmentBuilder(buffer, 'leaderboard.png');
+    // Create a file in Firebase Storage
+    const file = bucket.file('leaderboard.png');
 
-    // Send the attachment
-    await interaction.reply({ files: [attachment] });
+    // Create a read stream for the buffer
+    const readStream = createReadStream(buffer);
+
+    // Upload the image to Firebase Storage
+    await new Promise((resolve, reject) => {
+        readStream.pipe(file.createWriteStream())
+            .on('error', reject)
+            .on('finish', resolve);
+    });
+
+    // Make the file publicly accessible
+    await file.makePublic();
+
+    const timestamp = Date.now();
+    const url = `https://storage.googleapis.com/${bucket.name}/${file.name}?t=${timestamp}`;
+
+    const embed = new EmbedBuilder()
+        .setColor(0xFFBF00)
+        .setTitle('Tabla de clasificación / Pueblo Paleta 🎨')
+        .setImage(url); // Use the URL of the uploaded image
+
+    await interaction.editReply({ content: '¡Nueva tabla de clasificación!', embeds: [embed] });
 }
 
 export default { data, execute };

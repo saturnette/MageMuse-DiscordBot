@@ -5,18 +5,28 @@ import { SlashCommandBuilder } from 'discord.js';
 const data = new SlashCommandBuilder()
     .setName('givemedal')
     .setDescription('Get information about a user!')
-    .addUserOption(option => 
+    .addUserOption(option =>
         option.setName('user')
             .setDescription('The user to get information about')
             .setRequired(true)
-        
-        )
-        .addStringOption(option => 
-            option.setName('medal')
-                .setDescription('The user to get information about')
-                .setRequired(true)
-            
-            );
+
+    )
+    .addStringOption(option =>
+        option.setName('medal')
+            .setDescription('Choose a medal to give')
+            .setRequired(true)
+            .addChoices([
+                { name: 'Fuego', value: 'medal1' },
+                { name: 'Agua', value: 'medal2' },
+                { name: 'Lucha', value: 'medal3' },
+                { name: 'Volador', value: 'medal4' },
+                { name: 'Hada', value: 'medal5' },
+                { name: 'Siniestro', value: 'medal6' },
+                { name: 'Planta', value: 'medal7' },
+                { name: 'Eléctrico', value: 'medal8' },
+            ])
+
+    );
 
 async function execute(interaction) {
     // Obtenemos el objeto User del parámetro 'user'
