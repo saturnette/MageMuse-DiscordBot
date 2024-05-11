@@ -6,7 +6,11 @@ const userSchema = new mongoose.Schema({
     _id: String, // ID del usuario
     trainerName: String, // Nombre del usuario
     showdownNick: String, // Nick en showdown
+    try: Number,
+    tryDay: Number,
+    registered: { type: Boolean, default: false },
     medals: [String], // Lista de medallas
+    team: [String], // Lista de medallas
     elo: { type: Schema.Types.Number, default: 1000 }, // Elo del usuario con valor por defecto de 1000
 });
 

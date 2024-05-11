@@ -36,21 +36,36 @@ async function execute(interaction) {
     const medalName = interaction.options.getString('medal');
 
     // Damos la medalla al usuario
-    await giveMedal(user.id, user.username, medalName);
+    const medalGiven = await giveMedal(user.id, user.username, medalName);
 
     // Respondemos a la interacción
-    await interaction.reply(`¡${user.username} ha obtenido la medalla ${medalName}!`);
+    if (medalGiven) {
+        await interaction.reply(`¡${user.username} ha obtenido la medalla ${medalName}!`);
+    } else {
+        await interaction.reply(`¡${user.username} ya tiene la medalla ${medalName}!`);
+    }
+
 }
 
 async function giveMedal(userId, trainerName, medalName) {
     // Busca el perfil del usuario o crea uno nuevo si no existe
     const user = await User.findById(userId) || new User({ _id: userId, trainerName: trainerName });
 
-    // Agrega la medalla al perfil del usuario
-    user.medals.push(medalName);
+    if (!user.medals.includes(medalName)) {
+        // Agrega la medalla al perfil del usuario
+        user.medals.push(medalName);
 
-    // Guarda el perfil del usuario
-    await user.save();
+        // Guarda el perfil del usuario
+        await user.save();
+
+        // Devuelve true para indicar que la medalla fue agregada
+        return true;
+    }
+
+    // Devuelve false para indicar que el usuario ya tenía la medalla
+    return false;
+
+
 }
 
 export default { data, execute };

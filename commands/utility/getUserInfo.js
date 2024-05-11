@@ -2,35 +2,45 @@ import User from "../../model/user.model.js";
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { loadImage, createCanvas } from 'canvas';
-
+import axios from "axios";
 import { createReadStream } from 'streamifier';
 import 'dotenv/config';
 import bucket from '../../firebase.js';
 // Define las constantes para las imágenes y las medallas en la parte superior del archivo
-const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg.png?alt=media&token=151ed2a5-b418-4796-b614-5f6d8092cf62';
+const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg.png?alt=media&token=f585c2a8-4926-43bf-945e-51fd436b6b7f';
 const medallaSiluetaUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/0/09/latest/20180812034547/Medalla_Arco%C3%ADris.png';
 const medallaColorUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png';
 const medallas = [
-    { x: 50, y: 50, width: 50, height: 50 },
-    { x: 150, y: 50, width: 50, height: 50 },
-    { x: 250, y: 50, width: 50, height: 50 },
-    { x: 350, y: 50, width: 50, height: 50 },
-    { x: 50, y: 150, width: 50, height: 50 },
-    { x: 150, y: 150, width: 50, height: 50 },
-    { x: 250, y: 150, width: 50, height: 50 },
-    { x: 350, y: 150, width: 50, height: 50 }
+    { x: 25, y: 5, width: 50, height: 50 },
+    { x: 100, y: 5, width: 50, height: 50 },
+    { x: 175, y: 5, width: 50, height: 50 },
+    { x: 250, y: 5, width: 50, height: 50 },
+    { x: 325, y: 5, width: 50, height: 50 },
+    { x: 25, y: 75, width: 50, height: 50 },
+    { x: 100, y: 75, width: 50, height: 50 },
+    { x: 175, y: 75, width: 50, height: 50 },
+    { x: 250, y: 75, width: 50, height: 50 },
+    { x: 325, y: 75, width: 50, height: 50 }
+
 ];
+
+async function getPokemonSprite(pokemonName) {
+    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    return response.data.sprites.front_default;
+}
+
+
 const data = new SlashCommandBuilder()
     .setName('userinfomedal')
     .setDescription('Get information about a user!')
     .addUserOption(option =>
         option.setName('user')
             .setDescription('The user to get information about')
-            .setRequired(true));
+            .setRequired(false));
 
 async function execute(interaction) {
     // Obtenemos el objeto User del parámetro 'user'
-    const user = interaction.options.getUser('user');
+    const user = interaction.options.getUser('user') || interaction.user; // Cambia esta línea para usar interaction.user si no se proporcionó un usuario
     await interaction.reply({ content: 'Obteniendo datos...', fetchReply: true });
 
     console.log(user);
@@ -47,7 +57,7 @@ async function execute(interaction) {
     // Encuentra la posición del usuario en la lista ordenada
     const ranking = users.findIndex(user => user.id === userInfo.id) + 1;
 
-    const canvas = createCanvas(400, 200);
+    const canvas = createCanvas(800, 500);
     const context = canvas.getContext('2d');
 
     // Carga las imágenes
@@ -61,9 +71,38 @@ async function execute(interaction) {
     // Dibuja las medallas en el canvas
     userInfo.medals.forEach((medalla, index) => {
         const image = medalla ? medallaColor : medallaSilueta;
-        context.drawImage(image, medallas[index].x, medallas[index].y, medallas[index].width, medallas[index].height);
+        context.drawImage(image, medallas[index].x * 2, medallas[index].y * 2, medallas[index].width * 2, medallas[index].height * 2);
     });
 
+    const pokeballIconUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/pokeballbg.png?alt=media&token=195fe6f1-8805-4261-9d3d-f54a5b226f5e';
+    const pokeballIcon = await loadImage(pokeballIconUrl);
+    const row1 = userInfo.team.slice(0, 6);
+    const row2 = userInfo.team.slice(6, 12);
+    
+    for (let i = 0; i < row1.length; i++) {
+        const pokemonName = row1[i];
+        if (pokemonName) {
+            const spriteUrl = await getPokemonSprite(pokemonName);
+            const spriteImage = await loadImage(spriteUrl);
+    
+            // Dibuja el icono de la pokeball y el sprite del Pokémon en la primera fila
+            context.drawImage(pokeballIcon, 100 * i, 310, 100, 100);
+            context.drawImage(spriteImage, 100 * i, 310, 100, 100);
+        }
+    }
+    
+    for (let i = 0; i < row2.length; i++) {
+        const pokemonName = row2[i];
+        if (pokemonName) {
+            const spriteUrl = await getPokemonSprite(pokemonName);
+            const spriteImage = await loadImage(spriteUrl);
+    
+            // Dibuja el icono de la pokeball y el sprite del Pokémon en la segunda fila
+            // Alinea la segunda fila a la derecha restando la posición de i del ancho total del canvas
+            context.drawImage(pokeballIcon, 100 * (i + 2), 400, 100, 100);
+            context.drawImage(spriteImage, 100 * (i + 2), 400, 100, 100);
+        }
+    }
     // Convierte el canvas a un buffer
     const buffer = canvas.toBuffer('image/png');
 
@@ -92,20 +131,19 @@ async function execute(interaction) {
 
     const exampleEmbed = new EmbedBuilder()
         .setColor(0xFFBf00)
-        .setTitle(`Medallero de ${user.username}`)
-        .setURL('https://storage.googleapis.com/mawi-bot.appspot.com/pueblopaletaservericon.png')
+        .setTitle(`${user.globalName} (${user.username})`)
         .setAuthor({ name: 'Pueblo Paleta', iconURL: 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/pueblopaletaservericon.png?alt=media&token=1b0a6dc9-bb5e-4e66-8b0c-0d7b8c05a302', url: 'https://discord.js.org' })
         .setThumbnail(avatarURL)
         .addFields(
-            { name: 'Nick Showdown', value: userInfo.showdownNick || "N/A", inline: true },
-
-            { name: '\u200B', value: '\u200B' },
-
-            { name: 'Ladder', value: `${userInfo.elo.toString() || "N/A"} (Ranking #${ranking.toString() || "N/A"})`, inline: false },
+            {
+                name: ' ',
+                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Rank:** ${userInfo.elo.toString() || "N/A"}\n**👑 Posición** #${ranking.toString() || "N/A"}`,
+                inline: true
+            },
             { name: '\u200B', value: '\u200B' },
 
             {
-                name: 'Medallas',
+                name: '🏅 Medallas Obtenidas:',
                 value: userInfo.medals && userInfo.medals.length > 0 ? userInfo.medals.join(', ') : "N/A",
                 inline: false
             }
