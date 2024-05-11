@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     loses: Number,
     type: String,
     medalName: String,
+    bannerURL: String,
     registered: { type: Boolean, default: false },
     medals: [String], // Lista de medallas
     team: [String], // Lista de medallas

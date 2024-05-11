@@ -1,11 +1,11 @@
-import User from "../../models/user.model.js";
+import User from "../models/user.model.js";
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { loadImage, createCanvas } from 'canvas';
 import axios from "axios";
 import { createReadStream } from 'streamifier';
 import 'dotenv/config';
-import bucket from '../../firebase.js';
+import bucket from '../config/firebase.js';
 // Define las constantes para las imágenes y las medallas en la parte superior del archivo
 const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg4.png?alt=media&token=bbd907e2-be19-4d82-a454-66dbe08796b2';
 const medallaSiluetaUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/0/09/latest/20180812034547/Medalla_Arco%C3%ADris.png';

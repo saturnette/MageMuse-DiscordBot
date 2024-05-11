@@ -3,8 +3,8 @@ import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
-import { connectWithRetry } from './db.js';
-import './jobs/reset.js';
+import { connectWithRetry } from './src/config/db.js';
+import './src/jobs/reset.js';
 
 connectWithRetry();
 
@@ -21,35 +21,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Obtenemos la ruta del directorio de comandos
-const foldersPath = path.join(__dirname, "commands");
+const foldersPath = path.join(__dirname, "./src/commands");
 
 // Obtenemos la lista de carpetas de comandos
-const commandFolders = fs.readdirSync(foldersPath);
 
 // Recorremos cada carpeta de comandos
-for (const folder of commandFolders) {
 
   // Obtenemos la ruta de la carpeta de comandos actual
-  const commandsPath = path.join(foldersPath, folder);
 
   // Obtenemos la lista de archivos de comandos en la carpeta actual
   const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file) => file.endsWith(".js"));
+  .readdirSync(foldersPath)
+  .filter((file) => file.endsWith(".js"));
 
   // Recorremos cada archivo de comando
   for (const file of commandFiles) {
 
-    // Obtenemos la ruta del archivo de comando actual
-    const filePath = path.join(commandsPath, file);
-
-    // Convertimos la ruta del archivo a una URL de archivo
+    const filePath = path.join(foldersPath, file);
     const moduleURL = pathToFileURL(filePath);
-
-    // Importamos el módulo del comando
     const commandModule = await import(moduleURL);
-
-    // Obtenemos el comando exportado del módulo
     const command = commandModule.default;
 
     // Agregamos el comando a la colección de comandos del cliente
@@ -62,7 +52,6 @@ for (const folder of commandFolders) {
       );
     }
   }
-}
 
 // Cuando el cliente esté listo, ejecuta este código (solo una vez).
 // La distinción entre `client: Client<boolean>` y `readyClient: Client<true>` es importante para los desarrolladores de TypeScript.

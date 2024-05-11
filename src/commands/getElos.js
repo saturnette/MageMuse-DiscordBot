@@ -1,9 +1,9 @@
-import User from "../../models/user.model.js";
+import User from "../models/user.model.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { createCanvas, loadImage } from 'canvas';
 import fetch from 'node-fetch';
 import sharp from 'sharp';
-import bucket from '../../firebase.js';
+import bucket from '../config/firebase.js';
 import { createReadStream } from 'streamifier';
 import 'dotenv/config';
 

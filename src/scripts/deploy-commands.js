@@ -12,25 +12,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Obtenemos la ruta de la carpeta de comandos
-const foldersPath = path.join(__dirname, "commands");
+const foldersPath = path.join(__dirname, "../commands");
 
 // Leemos los nombres de las carpetas dentro de la carpeta de comandos
-const commandFolders = fs.readdirSync(foldersPath);
 
 // Para cada carpeta, leemos los archivos de comandos
-for (const folder of commandFolders) {
-  const commandsPath = path.join(foldersPath, folder);
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file) => file.endsWith(".js"));
+const commandFiles = fs
+  .readdirSync(foldersPath)
+  .filter((file) => file.endsWith(".js"));
 
   // Para cada archivo de comando, lo importamos y lo añadimos al array de comandos
   for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
+    const filePath = path.join(foldersPath, file);
     const moduleURL = pathToFileURL(filePath);
     const commandModule = await import(moduleURL);
     const command = commandModule.default;
-
     // Si el comando tiene las propiedades "data" y "execute", lo añadimos al array
     if ("data" in command && "execute" in command) {
       commands.push(command.data.toJSON());
@@ -41,7 +37,7 @@ for (const folder of commandFolders) {
         `[ADVERTENCIA] El comando en ${filePath} no tiene las propiedades "data" o "execute" requeridas.`
       );
     }
-  }
+  
 }
 
 // Creamos una nueva instancia del módulo REST y establecemos el token de Discord
