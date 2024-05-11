@@ -137,7 +137,7 @@ async function execute(interaction) {
         .addFields(
             {
                 name: ' ',
-                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Rank:** ${userInfo.elo.toString() || "N/A"}\n**👑 Posición** #${ranking.toString() || "N/A"}`,
+                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank* #${ranking.toString() || "N/A"}`,
                 inline: true
             },
             { name: '\u200B', value: '\u200B' },
