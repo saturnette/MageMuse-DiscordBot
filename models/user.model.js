@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     tryDay: { type: Number, default: 0},
     wins: Number,
     loses: Number,
+    type: String,
+    medalName: String,
     registered: { type: Boolean, default: false },
     medals: [String], // Lista de medallas
     team: [String], // Lista de medallas
