@@ -17,6 +17,7 @@
     "firebase-admin": "^12.1.0",
     "jimp": "^0.22.12",
     "mongoose": "^8.3.4",
+    "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "sharp": "^0.33.3",
     "streamifier": "^0.1.1"

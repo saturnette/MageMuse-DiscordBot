@@ -6,8 +6,10 @@ const userSchema = new mongoose.Schema({
     _id: String, // ID del usuario
     trainerName: String, // Nombre del usuario
     showdownNick: String, // Nick en showdown
-    try: Number,
-    tryDay: Number,
+    tryEF: { type: Number, default: 0},
+    tryDay: { type: Number, default: 0},
+    wins: Number,
+    loses: Number,
     registered: { type: Boolean, default: false },
     medals: [String], // Lista de medallas
     team: [String], // Lista de medallas

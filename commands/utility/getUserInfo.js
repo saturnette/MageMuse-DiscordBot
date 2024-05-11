@@ -7,7 +7,7 @@ import { createReadStream } from 'streamifier';
 import 'dotenv/config';
 import bucket from '../../firebase.js';
 // Define las constantes para las imágenes y las medallas en la parte superior del archivo
-const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg.png?alt=media&token=f585c2a8-4926-43bf-945e-51fd436b6b7f';
+const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg4.png?alt=media&token=bbd907e2-be19-4d82-a454-66dbe08796b2';
 const medallaSiluetaUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/0/09/latest/20180812034547/Medalla_Arco%C3%ADris.png';
 const medallaColorUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png';
 const medallas = [
@@ -137,7 +137,7 @@ async function execute(interaction) {
         .addFields(
             {
                 name: ' ',
-                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank* #${ranking.toString() || "N/A"}`,
+                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${ranking.toString() || "N/A"}`,
                 inline: true
             },
             { name: '\u200B', value: '\u200B' },

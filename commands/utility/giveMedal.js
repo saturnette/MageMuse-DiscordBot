@@ -28,32 +28,43 @@ const data = new SlashCommandBuilder()
 
     );
 
-async function execute(interaction) {
-    // Obtenemos el objeto User del parámetro 'user'
-    const user = interaction.options.getUser('user');
-
-    // Obtenemos el nombre de la medalla del parámetro 'medal'
-    const medalName = interaction.options.getString('medal');
-
-    // Damos la medalla al usuario
-    const medalGiven = await giveMedal(user.id, user.username, medalName);
-
-    // Respondemos a la interacción
-    if (medalGiven) {
-        await interaction.reply(`¡${user.username} ha obtenido la medalla ${medalName}!`);
-    } else {
-        await interaction.reply(`¡${user.username} ya tiene la medalla ${medalName}!`);
+    async function execute(interaction) {
+        // Obtenemos el objeto User del parámetro 'user'
+        const user = interaction.options.getUser('user');
+    
+        // Obtenemos el nombre de la medalla del parámetro 'medal'
+        const medalName = interaction.options.getString('medal');
+    
+        try {
+            // Damos la medalla al usuario
+            const medalGiven = await giveMedal(user.id, user.username, medalName);
+    
+            // Respondemos a la interacción
+            if (medalGiven) {
+                await interaction.reply(`¡${user.username} ha obtenido la medalla ${medalName}!`);
+            } else {
+                await interaction.reply(`¡${user.username} ya tiene la medalla ${medalName}!`);
+            }
+        } catch (error) {
+            // Respondemos a la interacción con el mensaje de error
+            await interaction.reply(error.message);
+        }
     }
-
-}
 
 async function giveMedal(userId, trainerName, medalName) {
     // Busca el perfil del usuario o crea uno nuevo si no existe
     const user = await User.findById(userId) || new User({ _id: userId, trainerName: trainerName });
+    console.log(user.tryDay);
+
+    if (user.tryDay >= 2) {
+        throw new Error('User has already used up their daily attempts');
+    }
 
     if (!user.medals.includes(medalName)) {
         // Agrega la medalla al perfil del usuario
         user.medals.push(medalName);
+
+        user.tryDay += 1;
 
         // Guarda el perfil del usuario
         await user.save();

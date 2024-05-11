@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
 import { connectWithRetry } from './db.js';
+import './jobs/reset.js';
 
 connectWithRetry();
 
