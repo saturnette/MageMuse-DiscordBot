@@ -1,7 +1,7 @@
-import  Cron from 'node-cron';
+import cron from 'node-cron';
 import User from '../models/user.model.js';
 
-Cron.schedule('0 0 * * *', async function() {
+cron.schedule('0 0 * * *', async function() {
     try {
         // Restablece el campo 'tryDay' a 0 para todos los usuarios
         await User.updateMany({}, { tryDay: 0 });

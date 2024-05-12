@@ -9,7 +9,7 @@
 2. Recargar los comandos slash del bot:
 
     ```bash
-    node deploy-commands.js
+    npm run deploy 
     ```
 
 3. Iniciar el bot:

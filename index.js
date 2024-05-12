@@ -5,6 +5,7 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
 import { connectWithRetry } from './src/config/db.js';
 import './src/jobs/reset.js';
+import './src/jobs/decay.js';
 
 connectWithRetry();
 

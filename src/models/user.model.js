@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     medals: [String], // Lista de medallas
     team: [String], // Lista de medallas
     elo: { type: Schema.Types.Number, default: 1000 }, // Elo del usuario con valor por defecto de 1000
+    gamesPlayed: { type: Number, default: 0 }, // Cantidad de juegos jugados por el usuario
 });
 
 // Crea el modelo de Mongoose para los perfiles de usuario
