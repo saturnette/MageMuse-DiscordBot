@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 // Define el esquema para los perfiles de usuario
 const userSchema = new mongoose.Schema({
     _id: String, // ID del usuario
-    trainerName: String, // Nombre del usuario
     showdownNick: String, // Nick en showdown
     tryEF: { type: Number, default: 0},
     tryDay: { type: Number, default: 0},

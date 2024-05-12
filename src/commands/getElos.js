@@ -17,7 +17,7 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
     // Busca todos los usuarios en la base de datos y los ordena por Elo de mayor a menor
-    const users = await User.find().sort({ elo: -1 });
+    const users = await User.find().sort({ elo: -1 }).limit(10);
     await interaction.reply({ content: 'Calculando elo...', fetchReply: true });
 
     // Define el tamaño del canvas
@@ -93,7 +93,7 @@ async function execute(interaction) {
         context.fillStyle = 'white';
 
         // Draw the rest of the text
-        context.fillText(` / ${user.elo} / ${user.trainerName}`, 70 + context.measureText(` #${i + 1}`).width, i * 60 + 35);
+        context.fillText(` / ${user.elo} / ${discordUser.username}`, 70 + context.measureText(` #${i + 1}`).width, i * 60 + 35);
     }
 
     // Convert the canvas to a buffer

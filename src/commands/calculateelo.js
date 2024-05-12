@@ -27,8 +27,8 @@ async function execute(interaction) {
     }
     // Actualizamos el Elo de los usuarios
     try {
-        const winnerUser = await User.findOneAndUpdate({ _id: winner.id }, { $setOnInsert: { elo: 1000, trainerName: winner.username } }, { upsert: true, new: true });
-        const loserUser = await User.findOneAndUpdate({ _id: loser.id }, { $setOnInsert: { elo: 1000,  trainerName: loser.username } }, { upsert: true, new: true });
+        const winnerUser = await User.findOneAndUpdate({ _id: winner.id }, { $setOnInsert: { elo: 1000 } }, { upsert: true, new: true });
+        const loserUser = await User.findOneAndUpdate({ _id: loser.id }, { $setOnInsert: { elo: 1000 } }, { upsert: true, new: true });
 
         const elow = winnerUser.elo;
         const elol = loserUser.elo;
