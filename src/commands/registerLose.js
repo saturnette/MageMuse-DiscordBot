@@ -29,6 +29,9 @@ const data = new SlashCommandBuilder()
                 throw new Error('User does not have a profile');
             }
     
+            if (!user.registered) {
+                throw new Error('Challenger is not registered');
+            }
             // Verificamos que el número de intentos del usuario que perdió sea menor a 2
             if (user.tryDay >= 2) {
                 throw new Error('User has already tried twice');

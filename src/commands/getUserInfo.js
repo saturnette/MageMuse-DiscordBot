@@ -7,7 +7,6 @@ import { createReadStream } from 'streamifier';
 import 'dotenv/config';
 import bucket from '../config/firebase.js';
 // Define las constantes para las imágenes y las medallas en la parte superior del archivo
-const backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg4.png?alt=media&token=bbd907e2-be19-4d82-a454-66dbe08796b2';
 const medallaSiluetaUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/0/09/latest/20180812034547/Medalla_Arco%C3%ADris.png';
 const medallaColorUrl = 'https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png';
 const medallas = [
@@ -43,6 +42,24 @@ async function execute(interaction) {
     const user = interaction.options.getUser('user') || interaction.user; // Cambia esta línea para usar interaction.user si no se proporcionó un usuario
     await interaction.reply({ content: 'Obteniendo datos...', fetchReply: true });
 
+    // Buscamos el perfil del usuario en la base de datos
+    const userProfile = await User.findById(user.id);
+
+    // Contamos el número de medallas que tiene el usuario
+    const numMedals = userProfile.medals.length;
+
+    let backgroundImageUrl;
+
+    // Seleccionamos la URL del fondo de pantalla en función del número de medallas
+    if (numMedals < 5) {
+        backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg1.png?alt=media&token=4419601a-5cac-43a8-9425-12aa5709ee4f';
+    } else if (numMedals >= 5 && numMedals <= 7) {
+        backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg2.png?alt=media&token=0c257c02-61a0-4d54-add0-ddf2d97f6d1e';
+    } else if (numMedals >= 8 && numMedals <= 9) {
+        backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg3.png?alt=media&token=6c7ff7da-c71f-4811-8399-d8f2f53a9b94';
+    } else if (numMedals == 10) {
+        backgroundImageUrl = 'https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/bg4.png?alt=media&token=bbd907e2-be19-4d82-a454-66dbe08796b2';
+    }
     console.log(user);
     // Obtenemos la información del usuario
     const userInfo = await getUserInfo(user.id);
@@ -78,25 +95,25 @@ async function execute(interaction) {
     const pokeballIcon = await loadImage(pokeballIconUrl);
     const row1 = userInfo.team.slice(0, 6);
     const row2 = userInfo.team.slice(6, 12);
-    
+
     for (let i = 0; i < row1.length; i++) {
         const pokemonName = row1[i];
         if (pokemonName) {
             const spriteUrl = await getPokemonSprite(pokemonName);
             const spriteImage = await loadImage(spriteUrl);
-    
+
             // Dibuja el icono de la pokeball y el sprite del Pokémon en la primera fila
             context.drawImage(pokeballIcon, 100 * i, 310, 100, 100);
             context.drawImage(spriteImage, 100 * i, 310, 100, 100);
         }
     }
-    
+
     for (let i = 0; i < row2.length; i++) {
         const pokemonName = row2[i];
         if (pokemonName) {
             const spriteUrl = await getPokemonSprite(pokemonName);
             const spriteImage = await loadImage(spriteUrl);
-    
+
             // Dibuja el icono de la pokeball y el sprite del Pokémon en la segunda fila
             // Alinea la segunda fila a la derecha restando la posición de i del ancho total del canvas
             context.drawImage(pokeballIcon, 100 * (i + 2), 400, 100, 100);
@@ -137,15 +154,14 @@ async function execute(interaction) {
         .addFields(
             {
                 name: ' ',
-                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${ranking.toString() || "N/A"}`,
+                value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${ranking.toString() || "N/A"}\n**🎟️ Alto Mando:** ${userInfo.tryEF || "N/A"}`,
                 inline: true
             },
             { name: '\u200B', value: '\u200B' },
 
             {
                 name: '🏅 Medallas Obtenidas:',
-                value: userInfo.medals && userInfo.medals.length > 0 ? userInfo.medals.join(', ') : "N/A",
-                inline: false
+                value: userInfo.medals && userInfo.medals.length > 0 ? '- ' + userInfo.medals.join('\n- ') : "N/A",                inline: false
             }
         )
         .setImage(url)

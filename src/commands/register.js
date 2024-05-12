@@ -14,13 +14,16 @@ async function execute(interaction) {
         await interaction.reply('You have already registered!');
         return;
     }
+    if (!user.team || user.team.length === 0) {
+        await interaction.reply('You need to have at least one Pokémon in your team to register!');
+        return;
+    }
 
     // Creamos el mensaje embed
     const embed = new EmbedBuilder()
-        .setTitle('Showdown Registration')
+        .setTitle(`Registro de ${interaction.user.globalName} (${interaction.user.username})`)
         .addFields(
-            { name: 'Nick', value: `${user.showdownNick || 'N/A'}`, inline: true },
-            { name: 'Pokemon Team', value: user.team.join(', '), inline: true }
+            { name: 'Pokémon Team', value: user.team.join(', '), inline: true }
         )
         .setColor('#0099ff');
 

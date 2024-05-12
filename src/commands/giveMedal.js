@@ -28,7 +28,9 @@ async function execute(interaction) {
         if (!user) {
             throw new Error('User does not have a profile');
         }
-
+        if (!user.registered) {
+            throw new Error('Challenger is not registered');
+        }
         // Verificamos que el número de intentos del usuario sea menor a 2
         if (user.tryDay >= 2) {
             throw new Error('User has already tried twice');
@@ -39,11 +41,30 @@ async function execute(interaction) {
         leaderProfile.loses += 1;
         await leaderProfile.save();
         // Respondemos a la interacción
-        if (medalGiven) {
-            await interaction.reply(`¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.medalName} de ${interaction.user.username}!`);
+
+        const userMedals = await User.findById(recipientUser.id);
+
+        const numMedals = userMedals.medals.length;
+
+        
+   
+        let replyMessage = '';
+
+        if (medalGiven && numMedals === 8) {
+            userMedals.tryEF += 2;
+            userMedals.save();
+            replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.medalName} de ${interaction.user.username}! Además, ¡ahora tienes dos pases para retar al Alto Mando!`;
+        } else if (medalGiven && numMedals === 10) {
+            userMedals.tryEF += 1;
+            userMedals.save();
+            replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.medalName} de ${interaction.user.username}! Además, ¡ahora tienes un nuevo pase para retar al Alto Mando!`;
+        } else if (medalGiven) {
+            replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.medalName} de ${interaction.user.username}!`;
         } else {
-            await interaction.reply(`¡${recipientUser.username} ya tiene la medalla ${leaderProfile.medalName}!`);
+            replyMessage = `¡${recipientUser.username} ya tiene la medalla ${leaderProfile.medalName}!`;
         }
+        
+        await interaction.reply(replyMessage);
     } catch (error) {
         // Respondemos a la interacción con el mensaje de error
         await interaction.reply(error.message);
