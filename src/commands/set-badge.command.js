@@ -23,15 +23,18 @@ async function execute(interaction) {
 
     const user = await User.findById(recipientUser.id);
     if (!user) {
-      throw new Error("User does not have a profile");
-    }
-    if (!user.registered) {
-      throw new Error("Challenger is not registered");
-    }
-
-    if (user.tryDay >= 2) {
-      throw new Error("User has already tried twice");
-    }
+        throw new Error("El usuario no tiene un perfil");
+      }
+  
+      if (!user.registered) {
+        throw new Error("El retador no está registrado");
+      }
+  
+      if (user.tryDay >= 2) {
+        throw new Error(
+          "El retador ya ha realizado sus dos intentos de hoy, lee el registro nmms."
+        );
+      }
 
     const badgeGiven = await giveBadge(
       recipientUser.id,

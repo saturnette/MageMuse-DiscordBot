@@ -43,7 +43,7 @@ async function execute(interaction) {
 
   if (winner.id === loser.id) {
     await interaction.reply(
-      "The winner and the loser cannot be the same user."
+      "El ganador y el perdedor no pueden ser el mismo."
     );
     return;
   }
@@ -99,7 +99,7 @@ async function execute(interaction) {
     });
   } catch (error) {
     console.error(error);
-    await interaction.reply("There was an error updating the Elo.");
+    await interaction.reply("Ha ocurrido un error actualizando el elo.");
   }
 }
 

@@ -43,7 +43,7 @@ async function execute(interaction) {
     await leaderProfile.save();
 
     await interaction.reply(
-      `¡${interaction.user.username} ha ganado! ${losingUser.username} ha perdido.`
+      `¡${interaction.user.username} ha defendido su gimnasio! El retador ${losingUser.username} ha perdido.`
     );
   } catch (error) {
     await interaction.reply(error.message);
