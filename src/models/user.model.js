@@ -1,23 +1,27 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-// Define el esquema para los perfiles de usuario
 const userSchema = new mongoose.Schema({
-    _id: String, // ID del usuario
-    showdownNick: String, // Nick en showdown
-    tryEF: { type: Number, default: 0},
-    tryDay: { type: Number, default: 0},
-    wins: Number,
-    loses: Number,
-    type: String,
-    medalName: String,
-    bannerURL: String,
-    registered: { type: Boolean, default: false },
-    medals: [String], // Lista de medallas
-    team: [String], // Lista de medallas
-    elo: { type: Schema.Types.Number, default: 1000 }, // Elo del usuario con valor por defecto de 1000
-    gamesPlayed: { type: Number, default: 0 }, // Cantidad de juegos jugados por el usuario
+  _id: String,
+  showdownNick: String,
+  tryEF: { type: Number, default: 0 },
+  tryDay: { type: Number, default: 0 },
+  allowChallenges: { type: Boolean, default: true },
+  wins: Number,
+  loses: Number,
+  badgeType: String,
+  badgeName: String,
+  bannerURL: String,
+  registered: { type: Boolean, default: false },
+  badges: [
+    {
+      badgeType: String,
+      name: String,
+    },
+  ],
+  team: [String],
+  elo: { type: Schema.Types.Number, default: 1000 },
+  gamesPlayed: { type: Number, default: 0 },
 });
 
-// Crea el modelo de Mongoose para los perfiles de usuario
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
