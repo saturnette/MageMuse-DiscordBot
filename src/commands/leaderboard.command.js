@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import { createCanvas, loadImage } from "canvas";
+import { registerFont, createCanvas, loadImage } from "canvas";
 import fetch from "node-fetch";
 import sharp from "sharp";
 import bucket from "../config/firebase.js";
@@ -18,10 +18,12 @@ async function execute(interaction) {
   const canvasWidth = 700;
   const canvasHeight = users.length * 60;
 
+  registerFont("../font/arial.ttf", { family: "Arial" });
+
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const context = canvas.getContext("2d");
 
-  context.font = "30px Sans-serif";
+  context.font = "30px Arial";
   context.fillStyle = "#ffffff";
 
   for (let i = 0; i < users.length; i++) {
