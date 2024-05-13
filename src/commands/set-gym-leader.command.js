@@ -31,7 +31,7 @@ async function execute(interaction) {
   await User.findByIdAndUpdate(user.id, {
     badgeType: badgeType,
     badgeName: badgeName,
-    $push: { badges: { badgeType: badgeType, name: badgeName } },
+    $push: { badges: { badgeType: badgeType, badgeName: badgeName } },
   });
 
   await interaction.reply(

@@ -12,6 +12,12 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+
+  if (!interaction.member.roles.cache.has('1239630002987995186')) {
+    await interaction.reply('No tienes el rol necesario para usar este comando.');
+    return;
+  }
+  
   const recipientUser = interaction.options.getUser("user");
 
   try {
@@ -74,8 +80,8 @@ async function execute(interaction) {
 async function giveBadge(userId, badgeName, badgeType) {
   const user = (await User.findById(userId)) || new User({ _id: userId });
 
-  if (!user.badges.some((badge) => badge.name === badgeName)) {
-    user.badges.push({ name: badgeName, badgeType: badgeType });
+  if (!user.badges.some((badge) => badge.badgeName === badgeName)) {
+    user.badges.push({ badgeName: badgeName, badgeType: badgeType });
 
     user.tryDay += 1;
 

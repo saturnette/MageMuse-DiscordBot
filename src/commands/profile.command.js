@@ -113,9 +113,12 @@ async function execute(interaction) {
   const user = interaction.options.getUser("user") || interaction.user;
   await interaction.reply({ content: "Obteniendo datos...", fetchReply: true });
 
-  const userProfile = await User.findById(user.id);
-
-  const numBadges = userProfile.badges.length;
+  const userProfile = await User.findOneAndUpdate(
+    { _id: user.id }, 
+    { $setOnInsert: { _id: user.id } }, 
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+);
+  const numBadges = userProfile.badges.length ? userProfile.badges.length : 0;
 
   let backgroundImageUrl;
 
@@ -149,7 +152,7 @@ async function execute(interaction) {
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
   Object.keys(badgesData).forEach(async (badgeName, index) => {
-    const hasBadge = userInfo.badges.some((badge) => badge.name === badgeName);
+    const hasBadge = userInfo.badges.some((badge) => badge.badgeName === badgeName);
     const imageUrl = hasBadge
       ? badgesData[badgeName].normal
       : badgesData[badgeName].silhouette;
@@ -237,11 +240,11 @@ async function execute(interaction) {
       {
         name: "🏅 Medallas Obtenidas:",
         value:
-          userInfo.badges && userInfo.badges.length > 0
+        userInfo && userInfo.badges && userInfo.badges.length > 0
             ? userInfo.badges
                 .map(
                   (badge) =>
-                    `- Medalla: **${badge.name}** — Gimnasio: **${badge.badgeType}**`
+                    `- Medalla: **${badge.badgeName}** — Gimnasio: **${badge.badgeType}**`
                 )
                 .join("\n")
             : "N/A",

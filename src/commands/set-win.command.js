@@ -14,6 +14,12 @@ const data = new SlashCommandBuilder()
 async function execute(interaction) {
   const losingUser = interaction.options.getUser("user");
 
+  if (!interaction.member.roles.cache.has('1239630002987995186')) {
+    await interaction.reply('No tienes el rol necesario para usar este comando.');
+    return;
+  }
+  
+
   try {
     const leaderProfile = await User.findById(interaction.user.id);
 

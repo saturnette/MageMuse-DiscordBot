@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
 import { connectWithRetry } from "./src/config/db.js";
+import User from "./src/models/user.model.js";
 import "./src/jobs/game-retry.job.js";
 import "./src/jobs/elo-decay.job.js";
 
@@ -44,6 +45,14 @@ client.once(Events.ClientReady, (readyClient) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
+
+  const userId = interaction.user.id;
+
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $setOnInsert: { _id: userId } },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
 
   const command = interaction.client.commands.get(interaction.commandName);
 
