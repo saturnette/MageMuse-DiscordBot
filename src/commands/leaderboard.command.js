@@ -18,7 +18,7 @@ async function execute(interaction) {
   const canvasWidth = 700;
   const canvasHeight = users.length * 60;
 
-  registerFont("../font/arial.ttf", { family: "Arial" });
+  registerFont("./src/font/arial.ttf", { family: "Arial" });
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const context = canvas.getContext("2d");
