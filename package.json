@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "node ./src/scripts/deploy-commands.js",
-    "start": "npm install --production && npm run deploy && node ."
+    "start": "npm install --omit=dev && npm run deploy && node ."
   },
   "author": "saturnette",
   "license": "ISC",

@@ -21,7 +21,7 @@ async function execute(interaction) {
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const context = canvas.getContext("2d");
 
-  context.font = "30px Arial";
+  context.font = "30px Sans-serif";
   context.fillStyle = "#ffffff";
 
   for (let i = 0; i < users.length; i++) {
