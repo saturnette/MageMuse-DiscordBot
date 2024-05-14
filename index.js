@@ -7,7 +7,7 @@ import { connectWithRetry } from "./src/config/db.js";
 import User from "./src/models/user.model.js";
 import "./src/jobs/game-retry.job.js";
 import "./src/jobs/elo-decay.job.js";
-
+import './keep_alive.js';
 connectWithRetry();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });

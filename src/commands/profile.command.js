@@ -25,9 +25,9 @@ const badgesData = {
   //falta
   Aura: {
     normal:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormal.png?alt=media&token=6f88675e-9ad8-49a8-96b8-9062f1b06350",
     silhouette:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormalsilueta.png?alt=media&token=44a8820a-ebed-41b4-8636-e80f24c3622c",
   },
 
   Divina: {
