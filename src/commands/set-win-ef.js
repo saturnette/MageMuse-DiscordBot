@@ -12,8 +12,12 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+  if (!interaction.member.roles.cache.has('1190733087018065930')) {
+    await interaction.reply('Necesitas ser alto mando para usar este comando.');
+    return;
+  }
   const recipientUser = interaction.options.getUser("user");
-
+  
   const userProfile = await User.findById(recipientUser.id);
 
   if (userProfile.tryEF === 0) {

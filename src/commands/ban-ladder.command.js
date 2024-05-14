@@ -12,6 +12,12 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+
+  if (!interaction.member.roles.cache.has('1125885671291224196')) {
+    await interaction.reply('No tienes el rol necesario para usar este comando.');
+    return;
+  }
+  
   const userToBan = interaction.options.getUser("user");
 
   const user = await User.findOne({ _id: userToBan.id });

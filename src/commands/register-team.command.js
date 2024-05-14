@@ -28,7 +28,7 @@ async function execute(interaction) {
     })
     .setColor("#0099ff");
 
-  const channel = interaction.client.channels.cache.get("1238722863557509181");
+  const channel = interaction.client.channels.cache.get("1239714240357732412");
   await channel.send({ embeds: [embed] });
 
   user.registered = true;

@@ -10,9 +10,9 @@ import bucket from "../config/firebase.js";
 const badgesData = {
   Valka: {
     normal:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fvolador.png?alt=media&token=f4fac454-8640-4b93-bcb5-51e371db2163",
     silhouette:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fvoladorsilueta.png?alt=media&token=297ac7d3-3291-4db0-ab6f-2a66021dc488",
   },
 
   Muscle: {
@@ -43,12 +43,11 @@ const badgesData = {
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Faguasilueta.png?alt=media&token=241ab192-aa12-4266-afb7-1f7f94979973",
   },
 
-  //falta
   Sakamoto: {
     normal:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsiniestro.png?alt=media&token=131ee221-08a0-42c3-9173-3883e738d006",
     silhouette:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsiniestrosilueta.png?alt=media&token=89e73fe7-25c3-4d12-9575-8fea05779e80",
   },
   Cansanscio: {
     normal:
@@ -63,13 +62,13 @@ const badgesData = {
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fhadasilueta.png?alt=media&token=e4287c4d-056a-4cca-98b7-ac0c3fc55384",
   },
 
-  //falta
   Ferraguardia: {
     normal:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Facero.png?alt=media&token=0c35fb02-f177-43f8-a17b-72507eb3e251",
     silhouette:
-      "https://images.wikidexcdn.net/mwuploads/wikidex/e/e6/latest/20180812014833/Medalla_Trueno.png",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Facerosilueta.png?alt=media&token=de4f0cc1-a257-40ae-91bf-f5d2f246ae5a",
   },
+
   Arcade: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fel%C3%A9ctrica.png?alt=media&token=ce181614-340e-4194-9cd2-048f0517857d",
@@ -114,10 +113,10 @@ async function execute(interaction) {
   await interaction.reply({ content: "Obteniendo datos...", fetchReply: true });
 
   const userProfile = await User.findOneAndUpdate(
-    { _id: user.id }, 
-    { $setOnInsert: { _id: user.id } }, 
+    { _id: user.id },
+    { $setOnInsert: { _id: user.id } },
     { upsert: true, new: true, setDefaultsOnInsert: true }
-);
+  );
   const numBadges = userProfile.badges.length ? userProfile.badges.length : 0;
 
   let backgroundImageUrl;
@@ -140,7 +139,7 @@ async function execute(interaction) {
 
   const avatarURL = user.displayAvatarURL({ format: "png", dynamic: true });
 
-  const users = await User.find().sort({ elo: -1 });
+  const users = await User.find().sort({ elo: -1, _id: 1 });
 
   const ranking = users.findIndex((user) => user.id === userInfo.id) + 1;
 
@@ -151,8 +150,12 @@ async function execute(interaction) {
 
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-  Object.keys(badgesData).forEach(async (badgeName, index) => {
-    const hasBadge = userInfo.badges.some((badge) => badge.badgeName === badgeName);
+  const badgeNames = Object.keys(badgesData);
+  for (let index = 0; index < badgeNames.length; index++) {
+    const badgeName = badgeNames[index];
+    const hasBadge = userInfo.badges.some(
+      (badge) => badge.badgeName === badgeName
+    );
     const imageUrl = hasBadge
       ? badgesData[badgeName].normal
       : badgesData[badgeName].silhouette;
@@ -164,7 +167,7 @@ async function execute(interaction) {
       badges[index].width * 2,
       badges[index].height * 2
     );
-  });
+  }
 
   const pokeballIconUrl =
     "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpokeballbg.png?alt=media&token=7aac7dcf-d671-4591-9137-95e0cc9d3dec";
@@ -240,7 +243,7 @@ async function execute(interaction) {
       {
         name: "🏅 Medallas Obtenidas:",
         value:
-        userInfo && userInfo.badges && userInfo.badges.length > 0
+          userInfo && userInfo.badges && userInfo.badges.length > 0
             ? userInfo.badges
                 .map(
                   (badge) =>

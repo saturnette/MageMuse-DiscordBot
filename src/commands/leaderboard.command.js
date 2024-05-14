@@ -12,7 +12,7 @@ const data = new SlashCommandBuilder()
   .setDescription("Obtiene la tabla de clasificación de Pueblo Paleta 🎨");
 
 async function execute(interaction) {
-  const users = await User.find().sort({ elo: -1 }).limit(10);
+  const users = await User.find().sort({ elo: -1, _id: 1 }).limit(10);  
   await interaction.reply({ content: "Calculando elo...", fetchReply: true });
 
   const canvasWidth = 700;

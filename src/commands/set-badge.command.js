@@ -13,8 +13,8 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
 
-  if (!interaction.member.roles.cache.has('1239630002987995186')) {
-    await interaction.reply('No tienes el rol necesario para usar este comando.');
+  if (!interaction.member.roles.cache.has('1189244936810397798')) {
+    await interaction.reply('Solo los lideres de gimnasio pueden otorgar medallas');
     return;
   }
   

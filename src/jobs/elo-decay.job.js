@@ -22,6 +22,7 @@ cron.schedule(
       user.gamesPlayed = 0;
 
       await user.save();
+      console.log(`Elo decayed for ${user.username} to ${user.elo} elo.`);
     }
   },
   {

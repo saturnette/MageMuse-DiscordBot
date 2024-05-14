@@ -24,6 +24,12 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+
+  if (!interaction.member.roles.cache.has('1125885671291224196')) {
+    await interaction.reply('No tienes el rol necesario para usar este comando.');
+    return;
+  }
+
   const user = interaction.options.getUser("user");
   const badgeType = interaction.options.getString("badgetype");
   const badgeName = interaction.options.getString("badgename");
@@ -32,7 +38,7 @@ async function execute(interaction) {
     badgeType: badgeType,
     badgeName: badgeName,
     $push: { badges: { badgeType: badgeType, badgeName: badgeName } },
-  });
+  }, { upsert: true });
 
   await interaction.reply(
     `¡${user.username} asciende a líder tipo ${badgeType}, su medalla es ${badgeName}! `
