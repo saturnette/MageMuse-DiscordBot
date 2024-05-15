@@ -22,12 +22,11 @@ const badgesData = {
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fmusclesilueta.png?alt=media&token=176d560b-e57f-424b-a08d-b42d5e9a472a",
   },
 
-  //falta
   Aura: {
     normal:
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormal.png?alt=media&token=6f88675e-9ad8-49a8-96b8-9062f1b06350",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpsiquico.png?alt=media&token=3578f6a6-cb6d-4944-af7e-b7c39d52c07c",
     silhouette:
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormalsilueta.png?alt=media&token=44a8820a-ebed-41b4-8636-e80f24c3622c",
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpsiquicosilueta.png?alt=media&token=28f9b6c3-7a7e-4c63-b619-c41acdacb42f",
   },
 
   Divina: {
@@ -36,6 +35,7 @@ const badgesData = {
     silhouette:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormalsilueta.png?alt=media&token=44a8820a-ebed-41b4-8636-e80f24c3622c",
   },
+
   Cascada: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fagua.png?alt=media&token=26387725-b653-49d8-b6bf-eebc58d0b181",
@@ -49,12 +49,14 @@ const badgesData = {
     silhouette:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsiniestrosilueta.png?alt=media&token=89e73fe7-25c3-4d12-9575-8fea05779e80",
   },
+
   Cansanscio: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Froca.png?alt=media&token=4f20083c-b9fe-4649-9577-34f0eed43d15",
     silhouette:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Frocasilueta.png?alt=media&token=d7435d26-c2e9-4e46-a2c2-76152d72ea90",
   },
+
   Resplandor: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fhada.png?alt=media&token=02947033-cf4e-4d18-aa97-18cd1e05ce1e",
@@ -72,7 +74,6 @@ const badgesData = {
   Arcade: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fel%C3%A9ctrica.png?alt=media&token=ce181614-340e-4194-9cd2-048f0517857d",
-
     silhouette:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fel%C3%A9ctricasilueta.png?alt=media&token=7fd05008-9659-4648-a382-f801ff72c5ac",
   },
