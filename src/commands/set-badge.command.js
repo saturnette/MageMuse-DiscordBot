@@ -58,13 +58,13 @@ async function execute(interaction) {
     let replyMessage = "";
 
     if (badgeGiven && numBadges === 8) {
-      userBadges.tryEF += 2;
+      userBadges.tryEF += 1;
       userBadges.save();
-      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! Además, ¡ahora tienes dos pases para retar al Alto Mando!`;
+      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! Además, ¡ahora tiene un ticket 🎫 para retar al Alto Mando!`;
     } else if (badgeGiven && numBadges === 10) {
       userBadges.tryEF += 1;
       userBadges.save();
-      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! Además, ¡ahora tienes un nuevo pase para retar al Alto Mando!`;
+      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! ¡Ha conseguido todas las medallas, que hazaña 🎉!, además, ¡obtiene un nuevo ticket 🎫 para retar al Alto Mando!`;
     } else if (badgeGiven) {
       replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}!`;
     } else {
