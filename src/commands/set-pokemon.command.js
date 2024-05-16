@@ -54,9 +54,10 @@ async function execute(interaction) {
     );
 
     await interaction.reply(
-      `¡Pokémon añadido exitosamente a tu equipo! Nuevo equipo: ${updatedUser.team.join(
-        ", "
-      )}`
+      `¡Pokémon añadido exitosamente a tu equipo! Ahora tienes **${updatedUser.team.length}** Pokémon en tu equipo. Puedes eliminar un pokemon con el comando **/remove-pokemon**\n\nNuevo equipo: ${updatedUser.team.join(", ")}`
+    );
+    
+    }`
     );
   } catch (error) {
     console.error(error);
