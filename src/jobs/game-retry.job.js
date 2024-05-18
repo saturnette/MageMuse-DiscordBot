@@ -11,7 +11,8 @@ cron.schedule(
       console.error("Error resetting tryDay for all users:", error);
     }
   },
-  null,
-  true,
-  "America/Tegucigalpa"
+  {
+    scheduled: true,
+    timezone: "Etc/GMT",
+  }
 );

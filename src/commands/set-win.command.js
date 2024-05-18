@@ -14,6 +14,10 @@ const data = new SlashCommandBuilder()
 async function execute(interaction) {
   const losingUser = interaction.options.getUser("user");
 
+  if (interaction.channel.id !== '1239731269177311323') {
+    throw new Error('JAJAJAA, no sabe leer como el pendejo de moji 😹😹😹😹.');
+  }
+
   if (!interaction.member.roles.cache.has('1189244936810397798')) {
     await interaction.reply('Necesitas ser líder de gimnasio para usar este comando.');
     return;

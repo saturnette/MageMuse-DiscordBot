@@ -21,6 +21,10 @@ async function execute(interaction) {
   const recipientUser = interaction.options.getUser("user");
 
   try {
+
+    if (interaction.channel.id !== '1239731269177311323') {
+      throw new Error('JAJAJAA, no sabe leer como el pendejo de moji 😹😹😹😹.');
+    }
     const leaderProfile = await User.findById(interaction.user.id);
 
     if (!leaderProfile || !leaderProfile.badgeName) {
