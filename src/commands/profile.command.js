@@ -226,7 +226,7 @@ async function execute(interaction) {
     .setAuthor({
       name: "Pueblo Paleta",
       iconURL:
-        "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/pueblopaletaservericon.png?alt=media&token=1b0a6dc9-bb5e-4e66-8b0c-0d7b8c05a302",
+        "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpueblopaletaservericon.png?alt=media&token=18bb0709-7636-4483-baf1-5906b0a81adc",
     })
     .setThumbnail(avatarURL)
     .addFields(
