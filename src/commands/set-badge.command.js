@@ -23,7 +23,7 @@ async function execute(interaction) {
   try {
 
     if (interaction.channel.id !== '1239731269177311323') {
-      throw new Error('JAJAJAA, no sabe leer como el pendejo de moji 😹😹😹😹.');
+      throw new Error("Este comando solo puede ser ejecutado en el canal de bitácora.");
     }
     const leaderProfile = await User.findById(interaction.user.id);
 

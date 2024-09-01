@@ -89,11 +89,14 @@ async function execute(interaction) {
   await file.makePublic();
 
   const timestamp = Date.now();
+
   const url = `https://storage.googleapis.com/${bucket.name}/${file.name}?t=${timestamp}`;
+
+  const serverName = interaction.guild.name;
 
   const embed = new EmbedBuilder()
     .setColor(0xffbf00)
-    .setTitle("Tabla de clasificación / Pueblo Paleta 🎨")
+    .setTitle(`Tabla de clasificación / ${serverName}`)
     .setImage(url);
 
   await interaction.editReply({
