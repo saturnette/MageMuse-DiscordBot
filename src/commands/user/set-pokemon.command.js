@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import axios from "axios";
 import User from "../../models/user.model.js";
+import Channel from "../../models/channel.model.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-pokemon")
@@ -13,6 +14,21 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+  // Obtener el ID del canal lobby desde la base de datos
+  const channelData = await Channel.findOne({});
+  const lobbyChannelId = channelData?.lobby;
+
+  if (!lobbyChannelId) {
+    await interaction.reply("No se ha configurado el canal de lobby. Usa el comando **/set-lobby** para configurarlo.");
+    return;
+  }
+
+  // Verificar si el comando se está usando en el canal lobby
+  if (interaction.channel.id !== lobbyChannelId) {
+    await interaction.reply("Este comando solo puede ser usado en el canal de lobby.");
+    return;
+  }
+
   const newPokemon = interaction.options.getString("pokemon");
 
   try {
@@ -57,7 +73,6 @@ async function execute(interaction) {
       `¡Pokémon añadido exitosamente a tu equipo! Ahora tienes **${updatedUser.team.length}** Pokémon en tu equipo. Puedes eliminar un pokemon con el comando **/remove-pokemon**\n\nNuevo equipo: ${updatedUser.team.join(", ")}`
     );
 
-  
   } catch (error) {
     console.error(error);
     await interaction.reply("Hubo un error al agregar el Pokémon al equipo.");

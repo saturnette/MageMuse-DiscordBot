@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import User from "../../models/user.model.js";
+import Channel from "../../models/channel.model.js";
 
 const data = new SlashCommandBuilder()
   .setName("register-team")
@@ -17,6 +18,26 @@ async function execute(interaction) {
     return;
   }
 
+  // Obtener el ID del canal register y lobby desde la base de datos
+  const channelData = await Channel.findOne({});
+  const registerChannelId = channelData?.register;
+  const lobbyChannelId = channelData?.lobby;
+
+  if (!registerChannelId) {
+    await interaction.reply("No se pudo encontrar el canal de registro.");
+    return;
+  }
+
+  if (!lobbyChannelId) {
+    await interaction.reply("No se ha configurado el canal de lobby. Usa el comando **/set-lobby** para configurarlo.");
+    return;
+  }
+  // Verificar si el comando se está usando en el canal lobby
+  if (interaction.channel.id !== lobbyChannelId) {
+    await interaction.reply("Este comando solo puede ser usado en el canal de lobby.");
+    return;
+  }
+
   const embed = new EmbedBuilder()
     .setTitle(
       `Registro de ${interaction.user.globalName} (${interaction.user.username})`
@@ -28,7 +49,7 @@ async function execute(interaction) {
     })
     .setColor("#0099ff");
 
-  const channel = interaction.client.channels.cache.get("1239714240357732412");
+  const channel = interaction.client.channels.cache.get(registerChannelId);
   await channel.send({ embeds: [embed] });
 
   user.registered = true;

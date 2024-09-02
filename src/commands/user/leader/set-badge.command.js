@@ -1,4 +1,6 @@
 import User from "../../../models/user.model.js";
+import Role from "../../../models/role.model.js";
+import Channel from "../../../models/channel.model.js";
 import { SlashCommandBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
@@ -12,39 +14,54 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+  // Obtener el rol leader de la base de datos
+  const roleData = await Role.findOne({});
+  const leaderRoleId = roleData?.leader;
 
-  if (!interaction.member.roles.cache.has('1189244936810397798')) {
-    await interaction.reply('Solo los lideres de gimnasio pueden otorgar medallas');
+  // Obtener el canal log de la base de datos
+  const channelData = await Channel.findOne({});
+  const logChannelId = channelData?.log;
+
+  // Verificar si el usuario tiene el rol leader
+  if (!interaction.member.roles.cache.has(leaderRoleId)) {
+    await interaction.reply('Solo los líderes de gimnasio pueden otorgar medallas.');
     return;
   }
-  
+
+  if(!logChannelId) {
+    await interaction.reply('No se ha configurado el canal de bitácora. Usa el comando **/set-channel** para configurarlo.');
+    return;
+  }
+
+  // Verificar si el comando se está usando en el canal log
+  if (interaction.channel.id !== logChannelId) {
+    await interaction.reply('Este comando solo puede ser ejecutado en el canal de bitácora.');
+    return;
+  }
+
   const recipientUser = interaction.options.getUser("user");
 
   try {
-
-    if (interaction.channel.id !== '1239731269177311323') {
-      throw new Error("Este comando solo puede ser ejecutado en el canal de bitácora.");
-    }
     const leaderProfile = await User.findById(interaction.user.id);
 
     if (!leaderProfile || !leaderProfile.badgeName) {
-      throw new Error("No tienes permisos para ejecutar este comando.");
+      throw new Error("¿Un líder de gimnasio sin medalla? 🤔");
     }
 
     const user = await User.findById(recipientUser.id);
     if (!user) {
-        throw new Error("El usuario no tiene un perfil");
-      }
-  
-      if (!user.registered) {
-        throw new Error("El retador no está registrado");
-      }
-  
-      if (user.tryDay >= 2) {
-        throw new Error(
-          "El retador ya ha realizado sus dos intentos de hoy, lee el registro nmms."
-        );
-      }
+      throw new Error("El usuario no tiene un perfil.");
+    }
+
+    if (!user.registered) {
+      throw new Error("El retador no está registrado.");
+    }
+
+    if (user.tryDay >= 2) {
+      throw new Error(
+        "El retador ya ha realizado sus dos intentos de hoy, lee el registro nmms."
+      );
+    }
 
     const badgeGiven = await giveBadge(
       recipientUser.id,
@@ -56,7 +73,6 @@ async function execute(interaction) {
     await leaderProfile.save();
 
     const userBadges = await User.findById(recipientUser.id);
-
     const numBadges = userBadges.badges.length;
 
     let replyMessage = "";

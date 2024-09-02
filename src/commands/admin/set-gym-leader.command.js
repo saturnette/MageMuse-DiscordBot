@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, PermissionsBitField } from "discord.js";
 import User from "../../models/user.model.js";
+import { badgesImages } from "../../utils/badges.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-gym-leader")
@@ -16,15 +17,19 @@ const data = new SlashCommandBuilder()
       .setDescription("El tipo de medalla a asignar")
       .setRequired(true)
   )
-  .addStringOption((option) =>
-    option
+  .addStringOption((option) => {
+    const badgeOptions = Object.keys(badgesImages).map((badge) => ({
+      name: badge,
+      value: badge,
+    }));
+    return option
       .setName("badgename")
       .setDescription("El nombre de la medalla a asignar")
       .setRequired(true)
-  );
+      .addChoices(...badgeOptions);
+  });
 
 async function execute(interaction) {
-
   // Verificar si el usuario que ejecuta el comando tiene permisos de administrador
   if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
     await interaction.reply('Solo los administradores pueden usar este comando.');

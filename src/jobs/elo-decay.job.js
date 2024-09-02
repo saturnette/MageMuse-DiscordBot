@@ -11,12 +11,12 @@ cron.schedule(
         continue;
       }
 
-      if (user.gamesPlayed >= 1 && user.elo > 1500) {
-        user.elo -= Math.floor((user.elo - 1500) / 100);
+      if (user.gamesPlayed >= 1 && user.elo > 1200) {
+        user.elo -= Math.floor((user.elo - 1200) / 100);
       }
 
-      if (user.gamesPlayed === 0 && user.elo > 1400) {
-        user.elo -= Math.floor((user.elo - 1400) / 50);
+      if (user.gamesPlayed === 0 && user.elo > 1100) {
+        user.elo -= Math.floor((user.elo - 1100) / 50);
       }
 
       user.gamesPlayed = 0;

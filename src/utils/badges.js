@@ -70,6 +70,7 @@ export const badgesImages = {
   },
 };
 
+
 export const badgesCoordinates = [
   { x: 25, y: 5, width: 50, height: 50 },
   { x: 100, y: 5, width: 50, height: 50 },
@@ -82,3 +83,27 @@ export const badgesCoordinates = [
   { x: 250, y: 75, width: 50, height: 50 },
   { x: 325, y: 75, width: 50, height: 50 },
 ];
+
+
+export function getBackgroundImageUrl(numBadges) {
+  let backgroundImageUrl;
+
+  if (numBadges < 5) {
+    backgroundImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg1.png?alt=media&token=b5d65c15-99d4-48e5-8dfd-b4858cc28cf1";
+  } else if (numBadges >= 5 && numBadges <= 7) {
+    backgroundImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg2.png?alt=media&token=f7d2e07b-b06e-408f-86d3-609251f03a91";
+  } else if (numBadges >= 8 && numBadges <= 9) {
+    backgroundImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg3.png?alt=media&token=bc115b2b-0806-4b42-9dae-db38084659bf";
+  } else if (numBadges == 10) {
+    backgroundImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg4.png?alt=media&token=645f80a1-3dc7-439c-90e7-920a4566e51f";
+  }
+
+  return backgroundImageUrl;
+}
+
+
+export const pokeballIconUrl = "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpokeballbg.png?alt=media&token=7aac7dcf-d671-4591-9137-95e0cc9d3dec";

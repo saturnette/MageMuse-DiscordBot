@@ -1,12 +1,11 @@
 import User from "../../models/user.model.js";
-
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { loadImage, createCanvas } from "canvas";
 import axios from "axios";
 import { createReadStream } from "streamifier";
 import "dotenv/config";
 import bucket from "../../config/firebase.js";
-import { badgesImages, badgesCoordinates } from "../../utils/badges.js";
+import { badgesImages, badgesCoordinates, getBackgroundImageUrl, pokeballIconUrl } from "../../utils/badges.js";
 
 const data = new SlashCommandBuilder()
   .setName("profile")
@@ -29,21 +28,7 @@ async function execute(interaction) {
   );
   const numBadges = userProfile.badges.length ? userProfile.badges.length : 0;
 
-  let backgroundImageUrl;
-
-  if (numBadges < 5) {
-    backgroundImageUrl =
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg1.png?alt=media&token=b5d65c15-99d4-48e5-8dfd-b4858cc28cf1";
-  } else if (numBadges >= 5 && numBadges <= 7) {
-    backgroundImageUrl =
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg2.png?alt=media&token=f7d2e07b-b06e-408f-86d3-609251f03a91";
-  } else if (numBadges >= 8 && numBadges <= 9) {
-    backgroundImageUrl =
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg3.png?alt=media&token=bc115b2b-0806-4b42-9dae-db38084659bf";
-  } else if (numBadges == 10) {
-    backgroundImageUrl =
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg4.png?alt=media&token=645f80a1-3dc7-439c-90e7-920a4566e51f";
-  }
+  let backgroundImageUrl = getBackgroundImageUrl(numBadges);
 
   const userInfo = await getUserInfo(user.id);
 
@@ -61,6 +46,7 @@ async function execute(interaction) {
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
   const badgeNames = Object.keys(badgesImages);
+
   for (let index = 0; index < badgeNames.length; index++) {
     const badgeName = badgeNames[index];
     const hasBadge = userInfo.badges.some(
@@ -79,8 +65,6 @@ async function execute(interaction) {
     );
   }
 
-  const pokeballIconUrl =
-    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpokeballbg.png?alt=media&token=7aac7dcf-d671-4591-9137-95e0cc9d3dec";
   const pokeballIcon = await loadImage(pokeballIconUrl);
   const row1 = userInfo.team.slice(0, 6);
   const row2 = userInfo.team.slice(6, 12);
@@ -115,6 +99,7 @@ async function execute(interaction) {
       contentType: "image/png",
     },
   });
+  
   createReadStream(buffer).pipe(stream);
 
   await new Promise((resolve, reject) => {
@@ -133,9 +118,8 @@ async function execute(interaction) {
     .setColor(0xffbf00)
     .setTitle(`${user.globalName} (${user.username})`)
     .setAuthor({
-      name: "Pueblo Paleta",
-      iconURL:
-        "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpueblopaletaservericon.png?alt=media&token=18bb0709-7636-4483-baf1-5906b0a81adc",
+      name: interaction.guild.name,
+      iconURL: interaction.guild.iconURL(),
     })
     .setThumbnail(avatarURL)
     .addFields(

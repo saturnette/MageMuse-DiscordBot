@@ -1,5 +1,5 @@
 import User from "../../models/user.model.js";
-
+import Channel from "../../models/channel.model.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
@@ -25,6 +25,21 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+  // Obtener el ID del canal ladder desde la base de datos
+  const channelData = await Channel.findOne({});
+  const ladderChannelId = channelData?.ladder;
+
+  if (!ladderChannelId) {
+    await interaction.reply("No se ha configurado el canal de ladder. Usa el comando **/set-channel** para configurarlo.");
+    return;
+  }
+
+  // Verificar si el comando se está usando en el canal ladder
+  if (interaction.channel.id !== ladderChannelId) {
+    await interaction.reply("Este comando solo puede ser usado en el canal de ladder.");
+    return;
+  }
+
   const winner = interaction.options.getUser("ganador");
   const loser = interaction.options.getUser("perdedor");
   const replayLink = interaction.options.getString("replay");
@@ -79,9 +94,8 @@ async function execute(interaction) {
       .setColor(0xffbf00)
       .setTitle(`Resultado: ${winner.username} Vs. ${loser.username}`)
       .setAuthor({
-        name: "Pueblo Paleta",
-        iconURL:
-          "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fpueblopaletaservericon.png?alt=media&token=18bb0709-7636-4483-baf1-5906b0a81adc",
+        name: interaction.guild.name,
+        iconURL: interaction.guild.iconURL(),
       })
       .addFields(
         {
