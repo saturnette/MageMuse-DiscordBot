@@ -34,6 +34,8 @@ async function execute(interaction) {
       );
     }
 
+    const leaderProfile = await User.findById(interaction.user.id);
+
     const badgeGiven = await giveBadge(
       recipientUser.id,
       leaderProfile.badgeName,
@@ -64,6 +66,7 @@ async function execute(interaction) {
 
     await interaction.reply(replyMessage);
   } catch (error) {
+    console.log(error);
     await interaction.reply(error.message);
   }
 }
