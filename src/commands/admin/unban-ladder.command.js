@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, PermissionsBitField } from "discord.js";
 import User from "../../models/user.model.js";
+import { adminOnly } from "../../middlewares/rol.middleware.js";
 
 const data = new SlashCommandBuilder()
   .setName("unban-ladder")
@@ -12,11 +13,6 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  // Verificar si el usuario que ejecuta el comando tiene permisos de administrador
-  if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-    await interaction.reply('Solo los administradores pueden usar este comando.');
-    return;
-  }
 
   const userToUnban = interaction.options.getUser("user");
 
@@ -40,4 +36,4 @@ async function execute(interaction) {
   );
 }
 
-export default { data, execute };
+export default { data, execute: adminOnly(execute) };

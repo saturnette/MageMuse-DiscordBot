@@ -9,7 +9,7 @@ import "dotenv/config";
 
 const data = new SlashCommandBuilder()
   .setName("leaderboard")
-  .setDescription("Obtiene la tabla de clasificación de Pueblo Paleta 🎨");
+  .setDescription("Obtiene la tabla de clasificación del servidor.");
 
 async function execute(interaction) {
   const users = await User.find().sort({ elo: -1, _id: 1 }).limit(10);  

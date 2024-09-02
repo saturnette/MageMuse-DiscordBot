@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, PermissionsBitField } from "discord.js";
 import Channel from "../../models/channel.model.js";
+import { adminOnly } from "../../middlewares/rol.middleware.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-channel")
@@ -25,12 +26,6 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
 
-  // Verificar si el usuario que ejecuta el comando tiene permisos de administrador
-  if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-    await interaction.reply('Solo los administradores pueden usar este comando.');
-    return;
-  }
-
   const channelType = interaction.options.getString("channeltype");
   const channel = interaction.options.getChannel("channel");
 
@@ -40,8 +35,8 @@ async function execute(interaction) {
   await Channel.findOneAndUpdate({}, update, { upsert: true });
 
   await interaction.reply(
-    `El canal ${channel.name} ha sido configurado como el canal ${channelType}.`
+    `El canal <#${channel.id}> ha sido configurado como el canal ${channelType}.`
   );
 }
 
-export default { data, execute };
+export default { data, execute: adminOnly(execute) };

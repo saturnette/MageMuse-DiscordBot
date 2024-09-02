@@ -1,22 +1,10 @@
 import mongoose from "mongoose";
 
 const channelSchema = new mongoose.Schema({
-    log: {
-        type: String,
-        default: "0000"
-    },
-    register: {
-        type: String,
-        default: "0000"
-    },
-    lobby: {
-        type: String,
-        default: "0000"
-    },
-    ladder: {
-        type: String,
-        default: "0000"
-    }
+    log: String,
+    register: String,
+    lobby: String,
+    ladder: String
 });
 
 export default mongoose.model("Channel", channelSchema);

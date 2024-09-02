@@ -1,5 +1,5 @@
 import User from "../../models/user.model.js";
-import Channel from "../../models/channel.model.js";
+import { ladderChannelOnly } from "../../middlewares/channel.middleware.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
@@ -25,20 +25,6 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  // Obtener el ID del canal ladder desde la base de datos
-  const channelData = await Channel.findOne({});
-  const ladderChannelId = channelData?.ladder;
-
-  if (!ladderChannelId) {
-    await interaction.reply("No se ha configurado el canal de ladder. Usa el comando **/set-channel** para configurarlo.");
-    return;
-  }
-
-  // Verificar si el comando se está usando en el canal ladder
-  if (interaction.channel.id !== ladderChannelId) {
-    await interaction.reply("Este comando solo puede ser usado en el canal de ladder.");
-    return;
-  }
 
   const winner = interaction.options.getUser("ganador");
   const loser = interaction.options.getUser("perdedor");
@@ -155,4 +141,4 @@ function getKFactor(elo) {
   }
 }
 
-export default { data, execute };
+export default { data, execute: ladderChannelOnly(execute) };

@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
 
 const roleSchema = new mongoose.Schema({
-    leader: {
-        type: String,
-        default: "0000"
-    },
-    elite: {
-        type: String,
-        default: "0000"
-    }
+    leader: String,
+    elite: String
 });
 
 export default mongoose.model("Role", roleSchema);

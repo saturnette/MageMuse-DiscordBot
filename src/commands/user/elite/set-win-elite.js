@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import User from "../../../models/user.model.js";
-import Role from "../../../models/role.model.js";
-import Channel from "../../../models/channel.model.js";
+import { logChannelOnly } from "../../../middlewares/channel.middleware.js";
+import { eliteRoleOnly } from "../../../middlewares/rol.middleware.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-win-elite")
@@ -14,31 +14,6 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-
-  // Obtener el rol elite de la base de datos
-  const roleData = await Role.findOne({});
-  const eliteRoleId = roleData?.elite;
-
-  // Obtener el canal log de la base de datos
-  const channelData = await Channel.findOne({});
-  const logChannelId = channelData?.log;
-
-  // Verificar si el usuario tiene el rol elite
-  if (!interaction.member.roles.cache.has(eliteRoleId)) {
-    await interaction.reply('Necesitas ser alto mando para usar este comando.');
-    return;
-  }
-
-  if(!logChannelId) {
-    await interaction.reply('No se ha configurado el canal de bitácora. Usa el comando **/set-channel** para configurarlo.');
-    return;
-  }
-
-  // Verificar si el comando se está usando en el canal log
-  if (interaction.channel.id !== logChannelId) {
-    await interaction.reply('Este comando solo puede ser usado en el canal bitácora.');
-    return;
-  }
 
   const recipientUser = interaction.options.getUser("user");
 
@@ -70,4 +45,4 @@ async function execute(interaction) {
   );
 }
 
-export default { data, execute };
+export default { data, execute: eliteRoleOnly(logChannelOnly(execute)) };

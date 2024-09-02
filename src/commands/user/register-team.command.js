@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import User from "../../models/user.model.js";
 import Channel from "../../models/channel.model.js";
+import { lobbyChannelOnly } from "../../middlewares/channel.middleware.js";
 
 const data = new SlashCommandBuilder()
   .setName("register-team")
@@ -21,20 +22,9 @@ async function execute(interaction) {
   // Obtener el ID del canal register y lobby desde la base de datos
   const channelData = await Channel.findOne({});
   const registerChannelId = channelData?.register;
-  const lobbyChannelId = channelData?.lobby;
 
   if (!registerChannelId) {
     await interaction.reply("No se pudo encontrar el canal de registro.");
-    return;
-  }
-
-  if (!lobbyChannelId) {
-    await interaction.reply("No se ha configurado el canal de lobby. Usa el comando **/set-lobby** para configurarlo.");
-    return;
-  }
-  // Verificar si el comando se está usando en el canal lobby
-  if (interaction.channel.id !== lobbyChannelId) {
-    await interaction.reply("Este comando solo puede ser usado en el canal de lobby.");
     return;
   }
 
@@ -58,4 +48,4 @@ async function execute(interaction) {
   await interaction.reply("¡Te has registrado exitosamente en la liga!");
 }
 
-export default { data, execute };
+export default { data, execute: lobbyChannelOnly(execute) };

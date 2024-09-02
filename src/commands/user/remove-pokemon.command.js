@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import User from "../../models/user.model.js";
-import Channel from "../../models/channel.model.js";
+import { lobbyChannelOnly } from "../../middlewares/channel.middleware.js";
 
 const data = new SlashCommandBuilder()
   .setName("remove-pokemon")
@@ -13,20 +13,6 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  // Obtener el ID del canal lobby desde la base de datos
-  const channelData = await Channel.findOne({});
-  const lobbyChannelId = channelData?.lobby;
-
-  if (!lobbyChannelId) {
-    await interaction.reply("No se ha configurado el canal de lobby. Usa el comando **/set-lobby** para configurarlo.");
-    return;
-  }
-
-  // Verificar si el comando se está usando en el canal lobby
-  if (interaction.channel.id !== lobbyChannelId) {
-    await interaction.reply("Este comando solo puede ser usado en el canal de lobby.");
-    return;
-  }
 
   const pokemonToRemove = interaction.options
     .getString("pokemon")
@@ -66,4 +52,4 @@ async function execute(interaction) {
   }
 }
 
-export default { data, execute };
+export default { data, execute: lobbyChannelOnly(execute) };

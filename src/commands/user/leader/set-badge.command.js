@@ -1,6 +1,6 @@
 import User from "../../../models/user.model.js";
-import Role from "../../../models/role.model.js";
-import Channel from "../../../models/channel.model.js";
+import { logChannelOnly } from "../../../middlewares/channel.middleware.js";
+import { leaderRoleOnly } from "../../../middlewares/rol.middleware.js";
 import { SlashCommandBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
@@ -14,39 +14,10 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  // Obtener el rol leader de la base de datos
-  const roleData = await Role.findOne({});
-  const leaderRoleId = roleData?.leader;
-
-  // Obtener el canal log de la base de datos
-  const channelData = await Channel.findOne({});
-  const logChannelId = channelData?.log;
-
-  // Verificar si el usuario tiene el rol leader
-  if (!interaction.member.roles.cache.has(leaderRoleId)) {
-    await interaction.reply('Solo los líderes de gimnasio pueden otorgar medallas.');
-    return;
-  }
-
-  if(!logChannelId) {
-    await interaction.reply('No se ha configurado el canal de bitácora. Usa el comando **/set-channel** para configurarlo.');
-    return;
-  }
-
-  // Verificar si el comando se está usando en el canal log
-  if (interaction.channel.id !== logChannelId) {
-    await interaction.reply('Este comando solo puede ser ejecutado en el canal de bitácora.');
-    return;
-  }
 
   const recipientUser = interaction.options.getUser("user");
 
   try {
-    const leaderProfile = await User.findById(interaction.user.id);
-
-    if (!leaderProfile || !leaderProfile.badgeName) {
-      throw new Error("¿Un líder de gimnasio sin medalla? 🤔");
-    }
 
     const user = await User.findById(recipientUser.id);
     if (!user) {
@@ -113,4 +84,4 @@ async function giveBadge(userId, badgeName, badgeType) {
   return false;
 }
 
-export default { data, execute };
+export default { data, execute: leaderRoleOnly(logChannelOnly(execute)) };
