@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, PermissionsBitField } from "discord.js";
 import User from "../../models/user.model.js";
 
 const data = new SlashCommandBuilder()
@@ -18,12 +18,13 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  if (!interaction.member.roles.cache.has("1125885671291224196")) {
-    await interaction.reply(
-      "No tienes el rol necesario para usar este comando."
-    );
+
+  // Verificar si el usuario que ejecuta el comando tiene permisos de administrador
+  if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    await interaction.reply('Solo los administradores pueden usar este comando.');
     return;
   }
+
   const user = interaction.options.getUser("usuario");
   const elo = interaction.options.getInteger("elo");
 

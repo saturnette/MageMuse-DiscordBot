@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const channelSchema = new mongoose.Schema({
-  log: { type: String, required: true },
-  register: { type: String, required: true },
+  log: String,
+  register: String,
 });
 
 export default mongoose.model("Channel", channelSchema);
