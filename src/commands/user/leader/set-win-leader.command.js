@@ -36,6 +36,8 @@ async function execute(interaction) {
     user.tryDay += 1;
     await user.save();
 
+    const leaderProfile = await User.findById(interaction.user.id);
+
     leaderProfile.wins += 1;
     await leaderProfile.save();
 
