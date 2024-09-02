@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "discord.js";
-import User from "../models/user.model.js";
+import User from "../../../models/user.model.js";
 
 const data = new SlashCommandBuilder()
-  .setName("set-win-ef")
+  .setName("set-win-elite")
   .setDescription("Registra una victoria del alto mando.")
   .addUserOption((option) =>
     option

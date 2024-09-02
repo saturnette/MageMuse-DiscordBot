@@ -11,12 +11,28 @@ const __dirname = path.dirname(__filename);
 
 const foldersPath = path.join(__dirname, "../commands");
 
-const commandFiles = fs
-  .readdirSync(foldersPath)
-  .filter((file) => file.endsWith(".js"));
+// Función recursiva para obtener todos los archivos de comandos
+function getCommandFiles(dir) {
+  let commandFiles = [];
+  const files = fs.readdirSync(dir);
 
-for (const file of commandFiles) {
-  const filePath = path.join(foldersPath, file);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      commandFiles = commandFiles.concat(getCommandFiles(filePath));
+    } else if (file.endsWith(".js")) {
+      commandFiles.push(filePath);
+    }
+  }
+
+  return commandFiles;
+}
+
+const commandFiles = getCommandFiles(foldersPath);
+
+for (const filePath of commandFiles) {
   const moduleURL = pathToFileURL(filePath);
   const commandModule = await import(moduleURL);
   const command = commandModule.default;

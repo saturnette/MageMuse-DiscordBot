@@ -1,8 +1,8 @@
-import User from "../models/user.model.js";
+import User from "../../../models/user.model.js";
 import { SlashCommandBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
-  .setName("set-win")
+  .setName("set-win-leader")
   .setDescription("¡Registra una victoria!")
   .addUserOption((option) =>
     option
@@ -32,11 +32,11 @@ async function execute(interaction) {
 
     const user = await User.findById(losingUser.id);
     if (!user) {
-      throw new Error("El usuario no tiene un perfil");
+      throw new Error("El usuario no tiene un perfil.");
     }
 
     if (!user.registered) {
-      throw new Error("El retador no está registrado");
+      throw new Error("El retador no está registrado en la liga.");
     }
 
     if (user.tryDay >= 2) {

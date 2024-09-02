@@ -1,4 +1,4 @@
-export const badgesData = {
+export const badgesImages = {
   Fogón: {
     normal:
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffire.png?alt=media&token=671e3ace-afec-42b5-8c84-6782dc8cee7b",
@@ -69,3 +69,16 @@ export const badgesData = {
       "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsteel_siluette.png?alt=media&token=e07ab77b-5aee-44b9-9b1b-9366caee0cd8",
   },
 };
+
+export const badgesCoordinates = [
+  { x: 25, y: 5, width: 50, height: 50 },
+  { x: 100, y: 5, width: 50, height: 50 },
+  { x: 175, y: 5, width: 50, height: 50 },
+  { x: 250, y: 5, width: 50, height: 50 },
+  { x: 325, y: 5, width: 50, height: 50 },
+  { x: 25, y: 75, width: 50, height: 50 },
+  { x: 100, y: 75, width: 50, height: 50 },
+  { x: 175, y: 75, width: 50, height: 50 },
+  { x: 250, y: 75, width: 50, height: 50 },
+  { x: 325, y: 75, width: 50, height: 50 },
+];

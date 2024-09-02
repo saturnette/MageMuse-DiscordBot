@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 
 const data = new SlashCommandBuilder()
@@ -20,13 +20,10 @@ async function execute(interaction) {
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
 
-      // Obtén el objeto 'User' de Discord.js
       const discordUser = await interaction.client.users.fetch(user._id);
 
-      // Obtén el nombre de usuario de Discord
       const username = discordUser ? discordUser.username : 'Usuario desconocido';
 
-      // Usa nombre de usuario en lugar del ID del usuario
       embed.addFields({
         name: `#${i + 1} ${username}`,
         value: `Wins: ${user.wins || 0}, Losses: ${user.loses || 0}, Total: ${user.wins + user.loses || 0}`,

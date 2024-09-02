@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import axios from "axios";
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-pokemon")

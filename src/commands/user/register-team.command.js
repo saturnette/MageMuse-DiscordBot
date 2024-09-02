@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 
 const data = new SlashCommandBuilder()
   .setName("register-team")

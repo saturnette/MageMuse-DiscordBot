@@ -1,33 +1,12 @@
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { loadImage, createCanvas } from "canvas";
 import axios from "axios";
 import { createReadStream } from "streamifier";
 import "dotenv/config";
-import bucket from "../config/firebase.js";
-import { badgesData } from "../config/images.js";
-
-
-const badges = [
-  { x: 25, y: 5, width: 50, height: 50 },
-  { x: 100, y: 5, width: 50, height: 50 },
-  { x: 175, y: 5, width: 50, height: 50 },
-  { x: 250, y: 5, width: 50, height: 50 },
-  { x: 325, y: 5, width: 50, height: 50 },
-  { x: 25, y: 75, width: 50, height: 50 },
-  { x: 100, y: 75, width: 50, height: 50 },
-  { x: 175, y: 75, width: 50, height: 50 },
-  { x: 250, y: 75, width: 50, height: 50 },
-  { x: 325, y: 75, width: 50, height: 50 },
-];
-
-async function getPokemonSprite(pokemonName) {
-  const response = await axios.get(
-    `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-  );
-  return response.data.sprites.front_default;
-}
+import bucket from "../../config/firebase.js";
+import { badgesImages, badgesCoordinates } from "../../utils/badges.js";
 
 const data = new SlashCommandBuilder()
   .setName("profile")
@@ -81,22 +60,22 @@ async function execute(interaction) {
 
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-  const badgeNames = Object.keys(badgesData);
+  const badgeNames = Object.keys(badgesImages);
   for (let index = 0; index < badgeNames.length; index++) {
     const badgeName = badgeNames[index];
     const hasBadge = userInfo.badges.some(
       (badge) => badge.badgeName === badgeName
     );
     const imageUrl = hasBadge
-      ? badgesData[badgeName].normal
-      : badgesData[badgeName].silhouette;
+      ? badgesImages[badgeName].normal
+      : badgesImages[badgeName].silhouette;
     const image = await loadImage(imageUrl);
     context.drawImage(
       image,
-      badges[index].x * 2,
-      badges[index].y * 2,
-      badges[index].width * 2,
-      badges[index].height * 2
+      badgesCoordinates[index].x * 2,
+      badgesCoordinates[index].y * 2,
+      badgesCoordinates[index].width * 2,
+      badgesCoordinates[index].height * 2
     );
   }
 
@@ -199,6 +178,13 @@ async function getUserInfo(userId) {
   if (!user) return null;
 
   return user;
+}
+
+async function getPokemonSprite(pokemonName) {
+  const response = await axios.get(
+    `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+  );
+  return response.data.sprites.front_default;
 }
 
 export default { data, execute };
