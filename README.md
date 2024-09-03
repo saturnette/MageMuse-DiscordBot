@@ -55,11 +55,11 @@
 
 ## Comandos
 - [Comandos de Administrador](#comandos-de-administrador)
-  - [ban-ladder](#ban-ladder)
   - [set-channel](#set-channel)
-  - [set-elo](#set-elo)
   - [set-role](#set-role)
+  - [set-elo](#set-elo)
   - [set-gym-leader](#set-gym-leader)
+  - [ban-ladder](#ban-ladder)
   - [unban-ladder](#unban-ladder)
 - [Comandos de Líder](#comandos-de-líder)
   - [set-badge](#set-badge)
@@ -67,28 +67,19 @@
 - [Comandos de Alto Mando](#comandos-de-alto-mando)
   - [set-win-elite](#set-win-elite)
 - [Comandos de Usuario](#comandos-de-usuario)
-  - [profile](#profile)
-  - [register-team](#register-team)
-  - [remove-pokemon](#remove-pokemon)
   - [set-pokemon](#set-pokemon)
-  - [showdown-nick](#showdown-nick)
-  - [leaderboard](#leaderboard)
-  - [log-leader](#log-leader)
+  - [remove-pokemon](#remove-pokemon)
+  - [register-team](#register-team)
   - [set-ladder-result](#set-ladder-result)
+  - [log-leader](#log-leader)
+  - [showdown-nick](#showdown-nick)
+  - [profile](#profile)
+  - [leaderboard](#leaderboard)
+
 
 ---
 
 ## Comandos de Administrador
-
-### `/ban-ladder`
-**Descripción**: Banea a un usuario para que no pueda recibir desafíos.
-
-- **Opciones:**
-  - **user** (requerido): El usuario a banear.
-- **Funcionalidad:**
-  - Banea al usuario configurando su campo `allowChallenges` a `false`.
-  - Mensaje adecuado si el usuario no existe o ya está baneado.
-- **Permisos:** Solo administradores.
 
 ---
 
@@ -109,19 +100,6 @@
 
 ---
 
-### `/set-elo`
-**Descripción**: Establece el ELO (rating) de un usuario.
-
-- **Opciones:**
-  - **usuario** (requerido): El usuario al que se le establecerá el ELO.
-  - **elo** (requerido): El nuevo valor de ELO.
-- **Funcionalidad:**
-  - Actualiza el ELO del usuario especificado en la base de datos.
-  - Mensaje adecuado si el usuario no existe o el ELO no se proporciona.
-- **Permisos:** Solo administradores.
-
----
-
 ### `/set-role`
 **Descripción**: Configura el ID de un rol específico.
 
@@ -134,6 +112,20 @@
   - Actualiza el tipo de rol especificado con el ID del rol proporcionado.
   - Crea una nueva entrada si el tipo de rol o el rol no existen.
 - **Permisos:** Solo administradores.
+
+---
+
+### `/set-elo`
+**Descripción**: Establece el ELO (rating) de un usuario.
+
+- **Opciones:**
+  - **usuario** (requerido): El usuario al que se le establecerá el ELO.
+  - **elo** (requerido): El nuevo valor de ELO.
+- **Funcionalidad:**
+  - Actualiza el ELO del usuario especificado en la base de datos.
+  - Mensaje adecuado si el usuario no existe o el ELO no se proporciona.
+- **Permisos:** Solo administradores.
+
 
 ---
 
@@ -151,6 +143,20 @@
 
 ---
 
+
+### `/ban-ladder`
+**Descripción**: Banea a un usuario para que no pueda recibir desafíos.
+
+- **Opciones:**
+  - **user** (requerido): El usuario a banear.
+- **Funcionalidad:**
+  - Banea al usuario configurando su campo `allowChallenges` a `false`.
+  - Mensaje adecuado si el usuario no existe o ya está baneado.
+- **Permisos:** Solo administradores.
+
+---
+
+
 ### `/unban-ladder`
 **Descripción**: Desbanea a un usuario para que pueda recibir desafíos.
 
@@ -161,7 +167,11 @@
   - Mensaje adecuado si el usuario no existe o ya está desbaneado.
 - **Permisos:** Solo administradores.
 
+
+
 ---
+
+
 
 ## Comandos de Líder
 
@@ -197,7 +207,7 @@
 ## Comandos de Alto Mando
 
 ### `/set-win-elite`
-**Descripción**: Registra una victoria del alto mando.
+**Descripción**: ¡Registra una victoria del alto mando!
 
 - **Opciones:**
   - **user** (requerido): El usuario que ha perdido.
@@ -212,24 +222,15 @@
 
 ## Comandos de Usuario
 
-### `/profile`
-**Descripción**: Obtiene información de un entrenador.
+### `/set-pokemon`
+**Descripción**: ¡Añade un Pokémon a tu equipo!
 
 - **Funcionalidad:**
-  - Muestra información del perfil del usuario, incluyendo medallas obtenidas y Pokémon en el equipo.
-  - Crea una imagen personalizada del perfil usando `canvas`.
-  - Guarda la imagen en Google Cloud Storage y la muestra en un mensaje embed en Discord.
-
-- **Este comando no tiene ninguna restriccioń de rol o canal.**
----
-
-### `/register-team`
-**Descripción**: Registra tu equipo de Pokémon para participar en la liga.
-
-- **Funcionalidad:**
-  - Verifica si el usuario ya está registrado o si tiene un equipo de Pokémon.
-  - Envía la información del equipo del usuario a un canal de registro específico en Discord.
-  - Marca al usuario como registrado en la base de datos.
+  - Agrega un nuevo Pokémon al equipo del usuario si no está registrado en la liga.
+  - Verifica que el Pokémon exista utilizando la API de PokéAPI.
+  - Verifica que el equipo del usuario no exceda el límite de 12 Pokémon.
+  - Actualiza el equipo del usuario en la base de datos.
+  - Responde con un mensaje de confirmación y el nuevo equipo del usuario.
 
 - **Solo puede ser usado en el canal lobby configurado con el comando set-channel.**
 
@@ -244,17 +245,50 @@
   - Actualiza el equipo del usuario en la base de datos.
   - Responde con un mensaje de confirmación y el nuevo equipo del usuario.
 
+- **Solo puede ser usado en el canal lobby configurado con el comando set-channel.**
+
 ---
 
-### `/set-pokemon`
-**Descripción**: ¡Añade un Pokémon a tu equipo!
+### `/register-team`
+**Descripción**: Registra tu equipo de Pokémon para participar en la liga.
 
 - **Funcionalidad:**
-  - Agrega un nuevo Pokémon al equipo del usuario si no está registrado en la liga.
-  - Verifica que el Pokémon exista utilizando la API de PokéAPI.
-  - Verifica que el equipo del usuario no exceda el límite de 12 Pokémon.
-  - Actualiza el equipo del usuario en la base de datos.
-  - Responde con un mensaje de confirmación y el nuevo equipo del usuario.
+  - Verifica si el usuario ya está registrado o si tiene un equipo de Pokémon.
+  - Envía la información del equipo del usuario a un canal de registro específico en Discord.
+  - Marca al usuario como registrado en la base de datos.
+
+- **Solo puede ser usado en el canal lobby configurado con el comando set-channel.**
+
+---
+
+### `/set-ladder-result`
+**Descripción**: ¡Registra el resultado de la batalla!
+
+- **Funcionalidad:**
+  - Registra el resultado de una batalla entre dos usuarios especificando un ganador y un perdedor.
+  - Verifica que el enlace de la repetición sea válido y que el ganador y el perdedor no sean la misma persona.
+  - Actualiza el Elo de ambos usuarios en función del resultado.
+  - Publica un mensaje en Discord con los detalles del resultado, incluyendo el cambio de Elo y un enlace a la repetición.
+
+- **Opciones:**
+  - **ganador** (requerido): El usuario ganador de la batalla.
+  - **perdedor** (requerido): El usuario perdedor de la batalla.
+  - **replay** (requerido): El enlace de la repetición de la batalla en Showdown.
+
+- **Solo puede ser usado en el canal de ladder configurado con el comando `set-channel`.**
+
+---
+
+### `/log-leader`
+**Descripción**: Muestra el rendimiento de los líderes de gimnasio.
+
+- **Funcionalidad:**
+  - Obtiene y muestra una lista de los líderes de gimnasio con sus respectivos rendimientos en batallas (ganadas y perdidas).
+  - Ordena a los líderes por el total de batallas (ganadas + perdidas) en orden descendente.
+  - Publica un mensaje en Discord con el rendimiento de cada líder.
+
+
+- **Este comando no tiene ninguna restriccioń de rol o canal.**
 
 ---
 
@@ -265,37 +299,39 @@
   - Actualiza el nick de Showdown del usuario en la base de datos.
   - Responde con un mensaje de confirmación que muestra el nuevo nick de Showdown del usuario.
 
+- **Este comando no tiene ninguna restriccioń de rol o canal.**
+
+---
+
+### `/profile`
+**Descripción**: Obtiene información de un entrenador.
+
+<p align="center">
+  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen02.jpg?alt=media&token=907ec3ac-d657-42e8-82ec-3e159458fc55" width="60%" alt="profile-command">
+</p>
+
+- **Funcionalidad:**
+  - Muestra información del perfil del usuario, incluyendo medallas obtenidas y Pokémon en el equipo.
+  - Crea una imagen personalizada del perfil usando `canvas`.
+  - Guarda la imagen en Google Cloud Storage y la muestra en un mensaje embed en Discord.
+
+- **Este comando no tiene ninguna restriccioń de rol o canal.**
+
 ---
 
 ### `/leaderboard`
 **Descripción**: Obtiene la tabla de clasificación del servidor.
+
+<p align="center">
+  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen01.jpg?alt=media&token=5693a9fc-226a-46d2-a640-fb4fad366e00" width="60%" alt="profile-command">
+</p>
 
 - **Funcionalidad:**
   - Obtiene los 10 usuarios con mayor puntaje de ELO.
   - Crea una imagen de la tabla de clasificación usando `canvas`.
   - Guarda la imagen en Google Cloud Storage y la muestra en un mensaje embed en Discord.
 
----
-
-### `/log-leader`
-**Descripción**: Registra una victoria o derrota en la tabla de clasificación.
-
-- **Opciones:**
-  - **win** (requerido): `true` para victoria, `false` para derrota.
-- **Funcionalidad:**
-  - Actualiza la tabla de clasificación y el perfil del líder en la base de datos.
-  - Envía un mensaje confirmando el registro de la victoria o derrota.
-
----
-
-### `/set-ladder-result`
-**Descripción**: Establece el resultado de la liga.
-
-- **Opciones:**
-  - **resultado** (requerido): El resultado de la liga (victoria/derrota).
-- **Funcionalidad:**
-  - Actualiza los resultados en la tabla de clasificación.
-  - Envía un mensaje confirmando el resultado de la liga.
+- **Este comando no tiene ninguna restriccioń de rol o canal.**
 
 ---
 
