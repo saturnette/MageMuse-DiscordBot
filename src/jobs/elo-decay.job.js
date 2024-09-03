@@ -27,6 +27,6 @@ cron.schedule(
   },
   {
     scheduled: true,
-    timezone: "Etc/GMT",
+    timezone: "America/Tegucigalpa",
   }
 );
