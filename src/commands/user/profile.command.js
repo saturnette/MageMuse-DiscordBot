@@ -129,7 +129,9 @@ async function execute(interaction) {
           userInfo.showdownNick || "N/A"
         }\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${
           ranking.toString() || "N/A"
-        }\n**🎟️ Alto Mando:** ${userInfo.tryEF || "N/A"}`,
+        }\n**🎟️ Alto Mando:** ${userInfo.tryEF || "N/A"}\n**🔄 Retos Usados:** ${
+          userInfo.tryDay || 0
+        }\n**📝 Registrado:** ${userInfo.registered ? "Sí" : "No"}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
