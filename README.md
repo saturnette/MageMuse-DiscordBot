@@ -307,7 +307,7 @@
 **Descripción**: Obtiene información de un entrenador.
 
 <p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen02.jpg?alt=media&token=907ec3ac-d657-42e8-82ec-3e159458fc55" width="60%" alt="profile-command">
+  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen02.jpg?alt=media&token=907ec3ac-d657-42e8-82ec-3e159458fc55" width="50%" alt="profile-command">
 </p>
 
 - **Funcionalidad:**
@@ -323,7 +323,7 @@
 **Descripción**: Obtiene la tabla de clasificación del servidor.
 
 <p align="center">
-  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen01.jpg?alt=media&token=5693a9fc-226a-46d2-a640-fb4fad366e00" width="60%" alt="profile-command">
+  <img src="https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fscreen01.png?alt=media&token=2872b153-34a2-480f-87b0-d52695c00254" width="50%" alt="profile-command">
 </p>
 
 - **Funcionalidad:**
