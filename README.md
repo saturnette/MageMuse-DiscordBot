@@ -5,7 +5,7 @@
     <h1 align="center">MageMuse</h1>
 </p>
 <p align="center">
-    <em><code>❯DiscordBot</code></em>
+    <em><code>❯ DiscordBot</code></em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/saturnette/MageMuse-DiscordBot?style=flat&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
