@@ -2,6 +2,7 @@ import User from "../../../models/user.model.js";
 import { logChannelOnly } from "../../../middlewares/channel.middleware.js";
 import { leaderRoleOnly } from "../../../middlewares/rol.middleware.js";
 import { SlashCommandBuilder } from "discord.js";
+import { generateAndSaveProfileImage } from "../../../utils/image-generator.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-badge")
@@ -14,11 +15,11 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
+  await interaction.deferReply(); // Defer the reply to give more time for processing
 
   const recipientUser = interaction.options.getUser("user");
 
   try {
-
     const user = await User.findById(recipientUser.id);
     if (!user) {
       throw new Error("El usuario no tiene un perfil.");
@@ -30,7 +31,7 @@ async function execute(interaction) {
 
     if (user.tryDay >= 2) {
       throw new Error(
-        "El retador ya ha realizado sus dos intentos de hoy, lee el registro nmms."
+        "El retador ya ha realizado sus dos intentos de hoy."
       );
     }
 
@@ -52,22 +53,24 @@ async function execute(interaction) {
 
     if (badgeGiven && numBadges === 8) {
       userBadges.tryEF += 1;
-      userBadges.save();
-      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! Además, ¡ahora tiene un ticket 🎫 para retar al Alto Mando!`;
+      await userBadges.save();
+      replyMessage = `¡<@${recipientUser.id}> ha obtenido la medalla **${leaderProfile.badgeName}** de <@${interaction.user.id}>! Además, ¡ahora tiene un ticket 🎫 para retar al Alto Mando!`;
     } else if (badgeGiven && numBadges === 10) {
       userBadges.tryEF += 1;
-      userBadges.save();
-      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}! ¡Ha conseguido todas las medallas, que hazaña 🎉!, además, ¡obtiene un nuevo ticket 🎫 para retar al Alto Mando!`;
+      await userBadges.save();
+      replyMessage = `¡<@${recipientUser.id}> ha obtenido la medalla **${leaderProfile.badgeName}** de <@${interaction.user.id}>! ¡Ha conseguido todas las medallas, que hazaña 🎉!, además, ¡obtiene un nuevo ticket 🎫 para retar al Alto Mando!`;
     } else if (badgeGiven) {
-      replyMessage = `¡${recipientUser.username} ha obtenido la medalla ${leaderProfile.badgeName} de ${interaction.user.username}!`;
+      replyMessage = `¡<@${recipientUser.id}> ha obtenido la medalla **${leaderProfile.badgeName}** de <@${interaction.user.id}>!`;
     } else {
-      replyMessage = `¡${recipientUser.username} ya tiene la medalla ${leaderProfile.badgeName}!`;
+      replyMessage = `¡<@${recipientUser.id}> ya tiene la medalla **${leaderProfile.badgeName}**!`;
     }
 
-    await interaction.reply(replyMessage);
+    await generateAndSaveProfileImage(recipientUser.id);
+
+    await interaction.followUp(replyMessage);
   } catch (error) {
-    console.log(error);
-    await interaction.reply(error.message);
+    console.error(error);
+    await interaction.followUp(error.message);
   }
 }
 

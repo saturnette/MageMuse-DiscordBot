@@ -29,7 +29,7 @@ async function execute(interaction) {
 
     if (user.tryDay >= 2) {
       throw new Error(
-        "El retador ya ha realizado sus dos intentos de hoy, lee el registro nmms."
+        "El retador ya ha realizado sus dos intentos de hoy."
       );
     }
 
@@ -42,7 +42,7 @@ async function execute(interaction) {
     await leaderProfile.save();
 
     await interaction.reply(
-      `¡${interaction.user.username} ha defendido su gimnasio! El retador ${losingUser.username} ha perdido.`
+      `¡<@${interaction.user.id}> ha defendido su gimnasio! El retador <@${losingUser.id}> ha perdido.`
     );
   } catch (error) {
     await interaction.reply(error.message);

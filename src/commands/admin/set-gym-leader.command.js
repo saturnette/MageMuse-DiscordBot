@@ -2,6 +2,7 @@ import { SlashCommandBuilder, PermissionsBitField } from "discord.js";
 import User from "../../models/user.model.js";
 import { badgesImages } from "../../utils/badges.js";
 import { adminOnly } from "../../middlewares/rol.middleware.js";
+import { generateAndSaveProfileImage } from "../../utils/image-generator.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-gym-leader")
@@ -31,18 +32,26 @@ const data = new SlashCommandBuilder()
   });
 
 async function execute(interaction) {
+  await interaction.deferReply(); // Defer the reply to give more time for processing
 
   const user = interaction.options.getUser("user");
   const badgeType = interaction.options.getString("badgetype");
   const badgeName = interaction.options.getString("badgename");
 
-  await User.findByIdAndUpdate(user.id, {
-    badgeType: badgeType,
-    badgeName: badgeName,
-    $push: { badges: { badgeType: badgeType, badgeName: badgeName } },
-  }, { upsert: true });
+  await User.findByIdAndUpdate(
+    user.id,
+    {
+      badgeType: badgeType,
+      badgeName: badgeName,
+      $push: { badges: { badgeType: badgeType, badgeName: badgeName } },
+    },
+    { upsert: true }
+  );
 
-  await interaction.reply(
+  // Generar y guardar la imagen del perfil
+  await generateAndSaveProfileImage(user.id);
+
+  await interaction.followUp(
     `¡${user.username} asciende a líder tipo ${badgeType}, su medalla es ${badgeName}! `
   );
 }

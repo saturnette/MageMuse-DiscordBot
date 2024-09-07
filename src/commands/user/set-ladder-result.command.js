@@ -1,6 +1,7 @@
 import User from "../../models/user.model.js";
 import { ladderChannelOnly } from "../../middlewares/channel.middleware.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { generateLeaderboardImage } from "../../utils/leaderboard-generator.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-ladder-result")
@@ -25,7 +26,6 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-
   const winner = interaction.options.getUser("ganador");
   const loser = interaction.options.getUser("perdedor");
   const replayLink = interaction.options.getString("replay");
@@ -97,9 +97,12 @@ async function execute(interaction) {
       content: "¡Resultados actualizados!",
       embeds: [embed],
     });
+
+    // Generar y guardar la imagen del perfil después de actualizar la interacción
+    await generateLeaderboardImage(interaction.client);
   } catch (error) {
     console.error(error);
-    await interaction.reply("Ha ocurrido un error actualizando el elo.");
+    await interaction.followUp("Ha ocurrido un error actualizando el elo.");
   }
 }
 
