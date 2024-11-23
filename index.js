@@ -58,35 +58,50 @@ client.once(Events.ClientReady, (readyClient) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  if (interaction.isChatInputCommand()) {
+    const userId = interaction.user.id;
 
-  const userId = interaction.user.id;
-
-  await User.findOneAndUpdate(
-    { _id: userId },
-    { $setOnInsert: { _id: userId } },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  );
-
-  const command = interaction.client.commands.get(interaction.commandName);
-
-  if (!command) {
-    console.error(
-      `No se encontró ningún comando que coincida con ${interaction.commandName}.`
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $setOnInsert: { _id: userId } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
     );
-    return;
-  }
 
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
+    const command = interaction.client.commands.get(interaction.commandName);
 
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: "¡Hubo un error al ejecutar este comando!",
-        ephemeral: true,
-      });
+    if (!command) {
+      console.error(
+        `No se encontró ningún comando que coincida con ${interaction.commandName}.`
+      );
+      return;
+    }
+
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      console.error(error);
+
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({
+          content: "¡Hubo un error al ejecutar este comando!",
+          ephemeral: true,
+        });
+      }
+    }
+  } else if (interaction.isAutocomplete()) {
+    const command = interaction.client.commands.get(interaction.commandName);
+
+    if (!command) {
+      console.error(
+        `No se encontró ningún comando que coincida con ${interaction.commandName}.`
+      );
+      return;
+    }
+
+    try {
+      await command.autocomplete(interaction);
+    } catch (error) {
+      console.error(error);
     }
   }
 });

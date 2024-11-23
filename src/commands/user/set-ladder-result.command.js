@@ -5,17 +5,11 @@ import { generateLeaderboardImage } from "../../utils/leaderboard-generator.js";
 
 const data = new SlashCommandBuilder()
   .setName("set-ladder-result")
-  .setDescription("¡Registra el resultado de la batalla!")
-  .addUserOption((option) =>
-    option
-      .setName("ganador")
-      .setDescription("El usuario ganador")
-      .setRequired(true)
-  )
+  .setDescription("¡Registra tu victoria!")
   .addUserOption((option) =>
     option
       .setName("perdedor")
-      .setDescription("El usuario perdedor")
+      .setDescription("El usuario al que venciste")
       .setRequired(true)
   )
   .addStringOption((option) =>
@@ -26,7 +20,7 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  const winner = interaction.options.getUser("ganador");
+  const winner = interaction.user; // El ganador es quien ejecuta el comando
   const loser = interaction.options.getUser("perdedor");
   const replayLink = interaction.options.getString("replay");
 
@@ -43,8 +37,8 @@ async function execute(interaction) {
   await interaction.reply({ content: "Ingresando datos...", fetchReply: true });
 
   if (winner.id === loser.id) {
-    await interaction.reply(
-      "El ganador y el perdedor no pueden ser el mismo."
+    await interaction.editReply(
+      "No puedes registrar una victoria contra ti mismo."
     );
     return;
   }
@@ -62,8 +56,8 @@ async function execute(interaction) {
     );
 
     if (!winnerUser.allowChallenges || !loserUser.allowChallenges) {
-      await interaction.reply(
-        "Uno de los usuarios está baneado y no puede recibir desafíos."
+      await interaction.editReply(
+        "Uno de los usuarios está baneado y no puede participar en desafíos."
       );
       return;
     }
@@ -94,7 +88,7 @@ async function execute(interaction) {
       );
 
     await interaction.editReply({
-      content: "¡Resultados actualizados!",
+      content: "¡Victoria registrada!",
       embeds: [embed],
     });
 

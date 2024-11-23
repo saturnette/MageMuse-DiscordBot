@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   tryEF: { type: Number, default: 0 },
   tryDay: { type: Number, default: 0 },
   allowChallenges: { type: Boolean, default: true },
+  facts : [String],
 });
 
 export default mongoose.model("User", userSchema);

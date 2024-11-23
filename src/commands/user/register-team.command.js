@@ -9,7 +9,7 @@ const data = new SlashCommandBuilder()
   .setDescription("Registra tu equipo de Pokémon para participar en la liga");
 
 async function execute(interaction) {
-  await interaction.deferReply(); // Defer the reply to give more time for processing
+  await interaction.deferReply(); 
 
   const user = await User.findById(interaction.user.id);
 
@@ -53,7 +53,7 @@ async function execute(interaction) {
   const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
 
   collector.on('collect', async i => {
-    await i.deferUpdate(); // Defer the update to give more time for processing
+    await i.deferUpdate(); 
 
     if (i.customId === 'confirm') {
       // Obtener el ID del canal register y lobby desde la base de datos
