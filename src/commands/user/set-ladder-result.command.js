@@ -19,86 +19,93 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-async function execute(interaction) {
-  const winner = interaction.user; // El ganador es quien ejecuta el comando
-  const loser = interaction.options.getUser("perdedor");
-  const replayLink = interaction.options.getString("replay");
-
-  const showdownReplayRegex =
-    /^https:\/\/replay\.pokemonshowdown\.com\/[a-z0-9-]+$/;
-  if (!showdownReplayRegex.test(replayLink)) {
-    await interaction.reply({
-      content: "Por favor, proporciona un enlace válido de Showdown Replay.",
-      ephemeral: true,
-    });
-    return;
-  }
-
-  await interaction.reply({ content: "Ingresando datos...", fetchReply: true });
-
-  if (winner.id === loser.id) {
-    await interaction.editReply(
-      "No puedes registrar una victoria contra ti mismo."
-    );
-    return;
-  }
-
-  try {
-    const winnerUser = await User.findOneAndUpdate(
-      { _id: winner.id },
-      { $setOnInsert: { elo: 1000 } },
-      { upsert: true, new: true }
-    );
-    const loserUser = await User.findOneAndUpdate(
-      { _id: loser.id },
-      { $setOnInsert: { elo: 1000 } },
-      { upsert: true, new: true }
-    );
-
-    if (!winnerUser.allowChallenges || !loserUser.allowChallenges) {
+  async function execute(interaction) {
+    const winner = interaction.user; // El ganador es quien ejecuta el comando
+    const loser = interaction.options.getUser("perdedor");
+    const replayLink = interaction.options.getString("replay");
+  
+    const showdownReplayRegex =
+      /^https:\/\/replay\.pokemonshowdown\.com\/[a-z0-9-]+$/;
+    if (!showdownReplayRegex.test(replayLink)) {
+      await interaction.reply({
+        content: "Por favor, proporciona un enlace válido de Showdown Replay.",
+        ephemeral: true,
+      });
+      return;
+    }
+  
+    await interaction.reply({ content: "Ingresando datos...", fetchReply: true });
+  
+    if (winner.id === loser.id) {
       await interaction.editReply(
-        "Uno de los usuarios está baneado y no puede participar en desafíos."
+        "No puedes registrar una victoria contra ti mismo."
       );
       return;
     }
-
-    const elow = winnerUser.elo;
-    const elol = loserUser.elo;
-
-    await updateElo(winnerUser._id, loserUser._id);
-
-    const winnerUse = await User.findById(winnerUser._id);
-    const loserUse = await User.findById(loserUser._id);
-
-    const embed = new EmbedBuilder()
-      .setColor(0xffbf00)
-      .setTitle(`Resultado: ${winner.username} Vs. ${loser.username}`)
-      .setAuthor({
-        name: interaction.guild.name,
-        iconURL: interaction.guild.iconURL(),
-      })
-      .addFields(
-        {
-          name: "Cambio de Elo",
-          value: `${winner.username}: + ${winnerUse.elo - elow}\n${
-            loser.username
-          }: - ${elol - loserUse.elo}`,
-        },
-        { name: "Replay", value: `[Ver repetición](${replayLink})` }
+  
+    try {
+      const winnerUser = await User.findOneAndUpdate(
+        { _id: winner.id },
+        { $setOnInsert: { elo: 1000 } },
+        { upsert: true, new: true }
       );
-
-    await interaction.editReply({
-      content: "¡Victoria registrada!",
-      embeds: [embed],
-    });
-
-    // Generar y guardar la imagen del perfil después de actualizar la interacción
-    await generateLeaderboardImage(interaction.client);
-  } catch (error) {
-    console.error(error);
-    await interaction.followUp("Ha ocurrido un error actualizando el elo.");
+      const loserUser = await User.findOneAndUpdate(
+        { _id: loser.id },
+        { $setOnInsert: { elo: 1000 } },
+        { upsert: true, new: true }
+      );
+  
+      if (!winnerUser.showdownNick || !loserUser.showdownNick) {
+        await interaction.editReply(
+          "No voy a registrar esa mamada, ambos usuarios deben tener una cuenta de showdown registrada para participar."
+        );
+        return;
+      }
+  
+      if (!winnerUser.allowChallenges || !loserUser.allowChallenges) {
+        await interaction.editReply(
+          "Uno de los usuarios está baneado y no puede participar en desafíos."
+        );
+        return;
+      }
+  
+      const elow = winnerUser.elo;
+      const elol = loserUser.elo;
+  
+      await updateElo(winnerUser._id, loserUser._id);
+  
+      const winnerUse = await User.findById(winnerUser._id);
+      const loserUse = await User.findById(loserUser._id);
+  
+      const embed = new EmbedBuilder()
+        .setColor(0xffbf00)
+        .setTitle(`Resultado: ${winner.username} Vs. ${loser.username}`)
+        .setAuthor({
+          name: interaction.guild.name,
+          iconURL: interaction.guild.iconURL(),
+        })
+        .addFields(
+          {
+            name: "Cambio de Elo",
+            value: `${winner.username}: + ${winnerUse.elo - elow}\n${
+              loser.username
+            }: - ${elol - loserUse.elo}`,
+          },
+          { name: "Replay", value: `[Ver repetición](${replayLink})` }
+        );
+  
+      await interaction.editReply({
+        content: "¡Victoria registrada!",
+        embeds: [embed],
+      });
+  
+      // Generar y guardar la imagen del perfil después de actualizar la interacción
+      await generateLeaderboardImage(interaction.client);
+    } catch (error) {
+      console.error(error);
+      await interaction.followUp("Ha ocurrido un error actualizando el elo.");
+    }
   }
-}
 
 async function updateElo(winnerId, loserId) {
   const winner = await User.findById(winnerId);
