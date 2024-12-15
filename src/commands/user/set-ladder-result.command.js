@@ -66,12 +66,12 @@ async function execute(interaction) {
   try {
     const winnerUser = await User.findOneAndUpdate(
       { _id: winner.id },
-      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0 } },
+      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0, gamesPlayed: 0 } },
       { upsert: true, new: true }
     );
     const loserUser = await User.findOneAndUpdate(
       { _id: loser.id },
-      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0 } },
+      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0, gamesPlayed: 0 } },
       { upsert: true, new: true }
     );
 
@@ -94,9 +94,11 @@ async function execute(interaction) {
 
     await updateElo(winnerUser._id, loserUser._id);
 
-    // Incrementar winsLadder y lossesLadder
+    // Incrementar winsLadder, lossesLadder y gamesPlayed
     winnerUser.winsLadder += 1;
     loserUser.lossesLadder += 1;
+    winnerUser.gamesPlayed += 1;
+    loserUser.gamesPlayed += 1;
     await winnerUser.save();
     await loserUser.save();
 
