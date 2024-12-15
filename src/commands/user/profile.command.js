@@ -67,12 +67,12 @@ async function execute(interaction) {
         }\n**📊 Efectividad:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0
             ? "0"
-            : (
+            : Math.round(
                 ((userInfo.winsLadder || 0) /
                   ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0))) *
-                100
-              ).toFixed(2)
-        } '%'`,
+                  100
+              )
+        }%`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
