@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   team: [String],
   badges: [{ badgeType: String, badgeName: String }],
   wins: { type: Number, default: 0 },
+  winsLadder: { type: Number, default: 0 },
+  lossesLadder: { type: Number, default: 0 },
   loses: { type: Number, default: 0 },
   elo: { type: Number, default: 1000 },
   registered: { type: Boolean, default: false },

@@ -56,7 +56,15 @@ async function execute(interaction) {
           ranking.toString() || "N/A"
         }\n**🎟️ Alto Mando:** ${userInfo.tryEF || "N/A"}\n**🔄 Retos Usados:** ${
           userInfo.tryDay || 0
-        }\n**📝 Registrado:** ${userInfo.registered ? "Sí" : "No"}`,
+        }\n**📝 Registrado:** ${userInfo.registered ? "Sí" : "No"}\n**🏆 Combates Ganados:** ${
+          userInfo.winsLadder || 0
+        }\n**❌ Combates Perdidos:** ${
+          userInfo.lossesLadder || 0
+        }\n**🏁 Total de Combates:** ${
+          (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)
+        }\n**📊 Efectividad:** ${
+          ((userInfo.winsLadder || 0) / ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)) * 100).toFixed(2) || 0
+        }%`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
