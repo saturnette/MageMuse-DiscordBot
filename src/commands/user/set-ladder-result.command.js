@@ -3,6 +3,8 @@ import { ladderChannelOnly } from "../../middlewares/channel.middleware.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { generateLeaderboardImage } from "../../utils/leaderboard-generator.js";
 
+const cooldowns = new Map();
+
 const data = new SlashCommandBuilder()
   .setName("set-ladder-result")
   .setDescription("¡Registra tu victoria!")
@@ -23,6 +25,24 @@ async function execute(interaction) {
   const winner = interaction.user; // El ganador es quien ejecuta el comando
   const loser = interaction.options.getUser("perdedor");
   const replayLink = interaction.options.getString("replay");
+
+  const now = Date.now();
+  const cooldownAmount = 120 * 1000; // 1 minuto en milisegundos
+
+  if (cooldowns.has(winner.id)) {
+    const expirationTime = cooldowns.get(winner.id) + cooldownAmount;
+
+    if (now < expirationTime) {
+      const timeLeft = (expirationTime - now) / 1000;
+      await interaction.reply({
+        content: `Por favor, espera ${timeLeft.toFixed(1)} segundos antes de usar este comando nuevamente.`,
+        ephemeral: true,
+      });
+      return;
+    }
+  }
+
+  cooldowns.set(winner.id, now);
 
   const showdownReplayRegex =
     /^https:\/\/replay\.pokemonshowdown\.com\/[a-z0-9-]+$/;
