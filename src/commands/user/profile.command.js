@@ -72,7 +72,7 @@ async function execute(interaction) {
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)
         } - **Wins:** ${userInfo.winsLadder || 0} - **Losses:** ${
           userInfo.lossesLadder || 0
-        }\n**📊 Efectividad:** ${
+        }\n**🎀 Efectividad:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0
             ? "0"
             : Math.round(

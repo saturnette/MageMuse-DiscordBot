@@ -67,7 +67,7 @@ export async function generateLeaderboardImage(client) {
 
         context.fillStyle = "white";
         context.fillText(
-          ` / ${user.elo} / W: ${user.winsLadder} - L: ${user.lossesLadder} - T: ${user.winsLadder + user.lossesLadder} / ${discordUser.username}`,
+          ` / ${user.elo} / ${user.winsLadder}W ${user.lossesLadder}L / ${discordUser.username}`,
           70 + context.measureText(` #${i + 1}`).width,
           i * 60 + 35
         );
