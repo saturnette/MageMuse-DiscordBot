@@ -63,8 +63,7 @@ async function execute(interaction) {
         }\n**🏁 Total de Combates:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)
         }\n**📊 Efectividad:** ${
-          ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0 ? 0 : ((userInfo.winsLadder || 0) / ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)) * 100).toFixed(2))        }%`,
-        inline: true,
+((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0 ? '0' : ((userInfo.winsLadder || 0) / ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)) * 100).toFixed(2)) + '%'`,        inline: true,
       },
       { name: "\u200B", value: "\u200B" },
 
