@@ -54,16 +54,26 @@ async function execute(interaction) {
           userInfo.showdownNick || "N/A"
         }\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${
           ranking.toString() || "N/A"
-        }\n**🎟️ Alto Mando:** ${userInfo.tryEF || "N/A"}\n**🔄 Retos Usados:** ${
-          userInfo.tryDay || 0
-        }\n**📝 Registrado:** ${userInfo.registered ? "Sí" : "No"}\n**🏆 Combates Ganados:** ${
+        }\n**🎟️ Alto Mando:** ${
+          userInfo.tryEF || "N/A"
+        }\n**🔄 Retos Usados:** ${userInfo.tryDay || 0}\n**📝 Registrado:** ${
+          userInfo.registered ? "Sí" : "No"
+        }\n**🏆 Combates Ganados:** ${
           userInfo.winsLadder || 0
         }\n**❌ Combates Perdidos:** ${
           userInfo.lossesLadder || 0
         }\n**🏁 Total de Combates:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)
         }\n**📊 Efectividad:** ${
-((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0 ? '0' : ((userInfo.winsLadder || 0) / ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)) * 100).toFixed(2)) + '%'`,        inline: true,
+          (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0
+            ? "0"
+            : (
+                ((userInfo.winsLadder || 0) /
+                  ((userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0))) *
+                100
+              ).toFixed(2)
+        } '%'`,
+        inline: true,
       },
       { name: "\u200B", value: "\u200B" },
 
