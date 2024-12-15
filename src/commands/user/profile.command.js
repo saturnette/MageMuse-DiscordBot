@@ -50,20 +50,28 @@ async function execute(interaction) {
     .addFields(
       {
         name: " ",
-        value: `**🎯 Showdown:** ${
-          userInfo.showdownNick || "N/A"
-        }\n**⭐ Elo:** ${userInfo.elo.toString() || "N/A"}\n**👑 Rank:** #${
-          ranking.toString() || "N/A"
-        }\n**🎟️ Alto Mando:** ${
+        value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}`,
+        inline: true,
+      },
+      { name: "\u200B", value: "\u200B" },
+      {
+        name: "Estadísticas de Liga",
+        value: `**🎟️ Alto Mando:** ${
           userInfo.tryEF || "N/A"
         }\n**🔄 Retos Usados:** ${userInfo.tryDay || 0}\n**📝 Registrado:** ${
           userInfo.registered ? "Sí" : "No"
-        }\n**🏆 Combates Ganados:** ${
-          userInfo.winsLadder || 0
-        }\n**❌ Combates Perdidos:** ${
-          userInfo.lossesLadder || 0
-        }\n**🏁 Total de Combates:** ${
+        }`,
+        inline: true,
+      },
+      { name: "\u200B", value: "\u200B" },
+      {
+        name: "Estadísticas de Ladder",
+        value: `**⭐ Elo:** ${
+          userInfo.elo.toString() || "N/A"
+        }\n**👑 Rank:** #${ranking.toString() || "N/A"}\n**🚀 Combates:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0)
+        } - **Wins:** ${userInfo.winsLadder || 0} - **Losses:** ${
+          userInfo.lossesLadder || 0
         }\n**📊 Efectividad:** ${
           (userInfo.winsLadder || 0) + (userInfo.lossesLadder || 0) === 0
             ? "0"
@@ -76,7 +84,6 @@ async function execute(interaction) {
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
-
       {
         name: "🏅 Medallas Obtenidas:",
         value:
