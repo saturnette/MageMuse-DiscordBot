@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   lossesLadder: { type: Number, default: 0 },
   loses: { type: Number, default: 0 },
   elo: { type: Number, default: 1000 },
+  eloLimit: { type: Number, default: 1000 },
   registered: { type: Boolean, default: false },
   gamesPlayed: { type: Number, default: 0 },
   tryEF: { type: Number, default: 0 },

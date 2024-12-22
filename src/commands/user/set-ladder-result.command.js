@@ -155,7 +155,7 @@ async function updateElo(winnerId, loserId) {
   );
 
   if (winner.elo < 1000) winner.elo = 1000;
-  if (loser.elo < 1000) loser.elo = 1000;
+  if (loser.elo < loser.eloLimit) loser.elo = loser.eloLimit;
 
   await winner.save();
   await loser.save();

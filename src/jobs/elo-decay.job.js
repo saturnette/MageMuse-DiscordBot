@@ -13,13 +13,13 @@ cron.schedule(
 
       if (user.gamesPlayed < 2 && user.elo > 1200) {
         user.elo -= Math.floor((user.elo - 1200) / 50);
-        if (user.elo < 1000) user.elo = 1000;
+        if (user.elo < user.eloLimit) user.elo = user.eloLimit;
         continue;
       }
 
       if (user.gamesPlayed === 0 && user.elo > 1000) {
         user.elo -= Math.floor((user.elo - 1000) / 100);
-        if (user.elo < 1000) user.elo = 1000;
+        if (user.elo < user.eloLimit) user.elo = user.eloLimit;
         continue;
       }
 
