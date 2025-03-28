@@ -52,8 +52,10 @@ async function execute(interaction) {
     };
 
     for (const [id, probability] of Object.entries(probabilities)) {
-      if (!exclusivePokemon.includes(parseInt(id))) {
-        probabilityGroups[probability].push(parseInt(id));
+      const pokemonId = parseInt(id);
+      // Excluir starters y exclusivos del color opuesto
+      if (!starters.includes(pokemonId) && !exclusivePokemon.includes(pokemonId)) {
+        probabilityGroups[probability].push(pokemonId);
       }
     }
 
@@ -79,14 +81,7 @@ async function execute(interaction) {
 
   const pokemonPack = [];
   for (let i = 0; i < 10; i++) {
-    let randomId = weightedRandomSelection();
-
-    // Aumentar la probabilidad de obtener un starter si el usuario ya tiene uno
-    if (starters.some(starter => user.pokemonCollection.some(p => p.number === starter))) {
-      if (Math.random() < 0.7) {
-        randomId = starters[Math.floor(Math.random() * starters.length)];
-      }
-    }
+    const randomId = weightedRandomSelection();
 
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
