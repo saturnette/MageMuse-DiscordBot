@@ -27,12 +27,18 @@ async function execute(interaction) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedPokemon = sortedPokemon.slice(startIndex, endIndex);
-
+  
+    const profileLink = `https://palette-dex.vercel.app/profile/${user.id}`;
+  
     return new EmbedBuilder()
       .setColor(0xffbf00)
       .setTitle(`Pokémon de ${targetUser.username}`)
-      .setDescription(paginatedPokemon.map(p => `**#${p.number} ${p.name}** (x${p.count})`).join("\n"))
-      .setFooter({ text: `Página ${page} de ${totalPages}` });
+      .setDescription(
+        paginatedPokemon
+          .map(p => `**#${p.number} ${p.name}** (x${p.count})`)
+          .join("\n")
+      )
+      .setFooter({ text: `Página ${page} de ${totalPages} | Visita tu perfil aquí: ${profileLink}` });
   };
 
   const generateRow = (page) => {

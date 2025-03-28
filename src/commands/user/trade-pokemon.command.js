@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import User from "../../models/user.model.js";
+import axios from "axios";
 
 const data = new SlashCommandBuilder()
   .setName("trade-pokemon")
@@ -95,19 +96,34 @@ async function execute(interaction) {
         user2.pokemonCollection.push({ number: yourPokemon.number, name: yourPokemon.name, count: 1 });
       }
 
-      // Evolución de Pokémon
+      let evolutionMessage = "";
+
+      // Evolución de Pokémon para user2
       if (evolutions[yourPokemonNumber]) {
         const evolution = evolutions[yourPokemonNumber];
-        user2.pokemonCollection = user2.pokemonCollection.map(p => 
+        const spriteResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon/${evolution.number}`);
+        const spriteUrl = spriteResponse.data.sprites.front_default;
+
+        user2.pokemonCollection = user2.pokemonCollection.map(p =>
           p.number === yourPokemonNumber ? { ...p, number: evolution.number, name: evolution.name } : p
         );
+
+        evolutionMessage += `¡El Pokémon **${yourPokemon.name}** de ${user2.username} ha evolucionado a **${evolution.name}**!\n`;
+        evolutionMessage += `![Evolución](${spriteUrl})\n`;
       }
 
+      // Evolución de Pokémon para user1
       if (evolutions[theirPokemonNumber]) {
         const evolution = evolutions[theirPokemonNumber];
-        user1.pokemonCollection = user1.pokemonCollection.map(p => 
+        const spriteResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon/${evolution.number}`);
+        const spriteUrl = spriteResponse.data.sprites.front_default;
+
+        user1.pokemonCollection = user1.pokemonCollection.map(p =>
           p.number === theirPokemonNumber ? { ...p, number: evolution.number, name: evolution.name } : p
         );
+
+        evolutionMessage += `¡El Pokémon **${theirPokemon.name}** de ${user1.username} ha evolucionado a **${evolution.name}**!\n`;
+        evolutionMessage += `![Evolución](${spriteUrl})\n`;
       }
 
       user1.linkCable -= 1;
@@ -115,7 +131,11 @@ async function execute(interaction) {
       await user1.save();
       await user2.save();
 
-      await i.update({ content: `¡Intercambio completado! Has intercambiado tu ${yourPokemon.name} por el ${theirPokemon.name} de ${interaction.user.username}.`, embeds: [], components: [] });
+      await i.update({
+        content: `¡Intercambio completado! Has intercambiado tu **${yourPokemon.name}** por el **${theirPokemon.name}** de ${interaction.user.username}.\n\n${evolutionMessage}`,
+        embeds: [],
+        components: []
+      });
     } else {
       await i.update({ content: `El intercambio ha sido rechazado.`, embeds: [], components: [] });
     }
