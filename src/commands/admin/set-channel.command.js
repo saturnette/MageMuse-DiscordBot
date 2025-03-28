@@ -14,7 +14,8 @@ const data = new SlashCommandBuilder()
         { name: 'log', value: 'log' },
         { name: 'register', value: 'register' },
         { name: 'lobby', value: 'lobby' },
-        { name: 'ladder', value: 'ladder' }
+        { name: 'ladder', value: 'ladder' },
+        { name: 'roll', value: 'roll' }
       )
   )
   .addChannelOption((option) =>

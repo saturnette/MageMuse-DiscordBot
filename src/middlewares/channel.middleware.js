@@ -22,6 +22,12 @@ export function lobbyChannelOnly(commandExecute) {
   };
 }
 
+export function rollChannelOnly(commandExecute) {
+  return async function (interaction) {
+    await checkChannel(interaction, "roll", commandExecute);
+  };
+}
+
 async function checkChannel(interaction, channelType, commandExecute) {
     const channelData = await Channel.findOne({});
     const channelId = channelData?.[channelType];

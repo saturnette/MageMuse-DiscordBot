@@ -39,8 +39,20 @@ async function execute(interaction) {
 
   url = url[0] + `&time=${Date.now()}`;
 
+  // Determinar el color del embed basado en el color favorito del usuario
+  let embedColor;
+  if (userInfo.favoriteColor === "red") {
+    embedColor = 0xff0000; // Rojo
+  } else if (userInfo.favoriteColor === "blue") {
+    embedColor = 0x0000ff; // Azul
+  } else {
+    embedColor = 0xffbf00; // Color por defecto
+  }
+
+  const profileLink = `https://palette-dex.vercel.app/profile/${user.id}`;
+
   const exampleEmbed = new EmbedBuilder()
-    .setColor(0xffbf00)
+    .setColor(embedColor)
     .setTitle(`${user.globalName} (${user.username})`)
     .setAuthor({
       name: interaction.guild.name,
@@ -50,7 +62,9 @@ async function execute(interaction) {
     .addFields(
       {
         name: " ",
-        value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}`,
+        value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**💰 Pokécoins:** ${userInfo.coins || 0}\n**🦄 Compañero:** ${
+          userInfo.companionPokemon ? userInfo.companionPokemon.name : "N/A"
+        }\n**🎨 Color Favorito:** ${userInfo.favoriteColor == "blue" ? "Azul" : "Rojo" || "N/A"}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
@@ -95,6 +109,11 @@ async function execute(interaction) {
                 )
                 .join("\n")
             : "N/A",
+        inline: false,
+      },
+      {
+        name: "🔗 Perfil",
+        value: `[Ver perfil completo](${profileLink})`,
         inline: false,
       }
     )

@@ -32,7 +32,7 @@ const data = new SlashCommandBuilder()
   });
 
 async function execute(interaction) {
-  await interaction.deferReply(); // Defer the reply to give more time for processing
+  await interaction.deferReply();  
 
   const user = interaction.options.getUser("user");
   const badgeType = interaction.options.getString("badgetype");
@@ -48,7 +48,6 @@ async function execute(interaction) {
     { upsert: true }
   );
 
-  // Generar y guardar la imagen del perfil
   await generateAndSaveProfileImage(user.id);
 
   await interaction.followUp(

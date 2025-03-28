@@ -18,7 +18,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, "./src/commands");
 
-// Función recursiva para obtener todos los archivos de comandos
 function getCommandFiles(dir) {
   let commandFiles = [];
   const files = fs.readdirSync(dir);

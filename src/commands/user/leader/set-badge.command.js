@@ -15,7 +15,7 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  await interaction.deferReply(); // Defer the reply to give more time for processing
+  await interaction.deferReply();
 
   const recipientUser = interaction.options.getUser("user");
 
@@ -30,9 +30,7 @@ async function execute(interaction) {
     }
 
     if (user.tryDay >= 2) {
-      throw new Error(
-        "El retador ya ha realizado sus dos intentos de hoy."
-      );
+      throw new Error("El retador ya ha realizado sus dos intentos de hoy.");
     }
 
     const leaderProfile = await User.findById(interaction.user.id);

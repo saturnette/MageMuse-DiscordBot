@@ -17,14 +17,12 @@ async function execute(interaction) {
 
   const recipientUser = interaction.options.getUser("user");
 
-  // Asegurarse de que el campo registered esté presente y obtener el perfil del usuario
   const userProfile = await User.findOneAndUpdate(
     { _id: recipientUser.id },
     { $setOnInsert: { registered: false } },
     { new: true, upsert: true }
   );
 
-  // Verificar si el usuario está registrado
   if (!userProfile.registered) {
     await interaction.reply(`${recipientUser.username} no está registrado en la liga.`);
     return;

@@ -56,7 +56,6 @@ async function execute(interaction) {
     await i.deferUpdate(); 
 
     if (i.customId === 'confirm') {
-      // Obtener el ID del canal register y lobby desde la base de datos
       const channelData = await Channel.findOne({});
       const registerChannelId = channelData?.register;
 
@@ -73,7 +72,6 @@ async function execute(interaction) {
 
       await i.followUp({ content: "¡Te has registrado exitosamente en la liga!", components: [] });
 
-      // Generar y guardar la imagen del perfil después de actualizar la interacción
       await generateAndSaveProfileImage(user.id);
     } else if (i.customId === 'cancel') {
       await i.followUp({ content: "Registro cancelado.", components: [] });

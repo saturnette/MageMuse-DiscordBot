@@ -2,6 +2,7 @@ import User from "../../models/user.model.js";
 import { ladderChannelOnly } from "../../middlewares/channel.middleware.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { generateLeaderboardImage } from "../../utils/leaderboard-generator.js";
+import axios from "axios";
 
 const cooldowns = new Map();
 
@@ -21,13 +22,15 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
+const specialEvolutions = [93, 75, 64, 67, 37, 58, 133, 61, 90, 44, 70, 25];
+
 async function execute(interaction) {
-  const winner = interaction.user; // El ganador es quien ejecuta el comando
+  const winner = interaction.user;
   const loser = interaction.options.getUser("perdedor");
   const replayLink = interaction.options.getString("replay");
 
   const now = Date.now();
-  const cooldownAmount = 120 * 1000; // 1 minuto en milisegundos
+  const cooldownAmount = 120 * 1000;
 
   if (cooldowns.has(winner.id)) {
     const expirationTime = cooldowns.get(winner.id) + cooldownAmount;
@@ -35,7 +38,9 @@ async function execute(interaction) {
     if (now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
       await interaction.reply({
-        content: `Por favor, espera ${timeLeft.toFixed(1)} segundos antes de usar este comando nuevamente.`,
+        content: `Por favor, espera ${timeLeft.toFixed(
+          1
+        )} segundos antes de usar este comando nuevamente.`,
         ephemeral: true,
       });
       return;
@@ -66,12 +71,28 @@ async function execute(interaction) {
   try {
     const winnerUser = await User.findOneAndUpdate(
       { _id: winner.id },
-      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0, gamesPlayed: 0 } },
+      {
+        $setOnInsert: {
+          elo: 1000,
+          winsLadder: 0,
+          lossesLadder: 0,
+          gamesPlayed: 0,
+          coins: 0,
+        },
+      },
       { upsert: true, new: true }
     );
     const loserUser = await User.findOneAndUpdate(
       { _id: loser.id },
-      { $setOnInsert: { elo: 1000, winsLadder: 0, lossesLadder: 0, gamesPlayed: 0 } },
+      {
+        $setOnInsert: {
+          elo: 1000,
+          winsLadder: 0,
+          lossesLadder: 0,
+          gamesPlayed: 0,
+          coins: 0,
+        },
+      },
       { upsert: true, new: true }
     );
 
@@ -94,16 +115,79 @@ async function execute(interaction) {
 
     await updateElo(winnerUser._id, loserUser._id);
 
-    // Incrementar winsLadder, lossesLadder y gamesPlayed
     winnerUser.winsLadder += 1;
     loserUser.lossesLadder += 1;
     winnerUser.gamesPlayed += 1;
     loserUser.gamesPlayed += 1;
-    await winnerUser.save();
-    await loserUser.save();
+
+    // Incrementar el número de batallas del Pokémon compañero
+    if (winnerUser.companionPokemon) {
+      winnerUser.companionBattles += 1;
+
+      if (winnerUser.companionBattles === 3) {
+        await interaction.followUp(
+          `${winnerUser.companionPokemon.name} se está haciendo demasiado fuerte.`
+        );
+      }
+
+      if (winnerUser.companionBattles === 5) {
+        const companionNumber = winnerUser.companionPokemon.number;
+        if (!specialEvolutions.includes(companionNumber)) {
+          const evolution = await getEvolution(companionNumber);
+          if (evolution) {
+            const originalName = winnerUser.companionPokemon.name;
+            winnerUser.companionPokemon = {
+              number: evolution.number,
+              name: evolution.name,
+              count: 1,
+            };
+            winnerUser.companionBattles = 0;
+
+            const existingPokemon = winnerUser.pokemonCollection.find(
+              (p) => p.number === evolution.number
+            );
+            if (existingPokemon) {
+              existingPokemon.count += 1;
+            } else {
+              winnerUser.pokemonCollection.push({
+                number: evolution.number,
+                name: evolution.name,
+                count: 1,
+              });
+            }
+            // Obtener el sprite del Pokémon evolucionado
+            const spriteUrl = await getPokemonSprite(evolution.number);
+
+            await interaction.followUp({
+              embeds: [
+                new EmbedBuilder()
+                  .setColor(0xffbf00)
+                  .setTitle(`¡Evolución!`)
+                  .setDescription(
+                    `¡Tu ${originalName} ha evolucionado a ${evolution.name}!`
+                  )
+                  .setImage(spriteUrl),
+              ],
+            });
+          }
+        }
+      }
+    }
 
     const winnerUse = await User.findById(winnerUser._id);
     const loserUse = await User.findById(loserUser._id);
+
+    // Modificar la lógica de coins para evitar valores negativos
+    const winnerEloGain = winnerUse.elo - elow;
+    const loserEloDrop = elol - loserUse.elo;
+
+    winnerUser.coins += winnerEloGain;
+
+    // Asegurarse de que las coins del perdedor no bajen de cero
+    loserUser.coins = Math.max(0, loserUser.coins - loserEloDrop);
+
+    await winnerUser.save();
+    await loserUser.save();
 
     const embed = new EmbedBuilder()
       .setColor(0xffbf00)
@@ -115,9 +199,7 @@ async function execute(interaction) {
       .addFields(
         {
           name: "Cambio de Elo",
-          value: `${winner.username}: + ${winnerUse.elo - elow}\n${
-            loser.username
-          }: - ${elol - loserUse.elo}`,
+          value: `${winner.username}: + ${winnerEloGain}\n${loser.username}: - ${loserEloDrop}`,
         },
         { name: "Replay", value: `[Ver repetición](${replayLink})` }
       );
@@ -127,11 +209,53 @@ async function execute(interaction) {
       embeds: [embed],
     });
 
-    // Generar y guardar la imagen del perfil después de actualizar la interacción
     await generateLeaderboardImage(interaction.client);
   } catch (error) {
     console.error(error);
     await interaction.followUp("Ha ocurrido un error actualizando el elo.");
+  }
+}
+
+async function getEvolution(pokemonNumber) {
+  try {
+    const speciesResponse = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`
+    );
+    const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
+    const evolutionChainResponse = await axios.get(evolutionChainUrl);
+    const chain = evolutionChainResponse.data.chain;
+
+    let current = chain;
+    while (current) {
+      if (current.species.url.endsWith(`/${pokemonNumber}/`)) {
+        if (current.evolves_to.length > 0) {
+          const evolution = current.evolves_to[0].species;
+          const evolutionNumber = parseInt(
+            evolution.url.split("/").slice(-2, -1)[0]
+          );
+          const evolutionName =
+            evolution.name.charAt(0).toUpperCase() + evolution.name.slice(1);
+          return { number: evolutionNumber, name: evolutionName };
+        }
+        break;
+      }
+      current = current.evolves_to[0];
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  return null;
+}
+
+async function getPokemonSprite(pokemonNumber) {
+  try {
+    const response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`
+    );
+    return response.data.sprites.front_default;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
 
