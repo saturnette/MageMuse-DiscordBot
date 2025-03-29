@@ -3,6 +3,8 @@ import axios from "axios";
 import User from "../../models/user.model.js";
 import { rollChannelOnly } from "../../middlewares/channel.middleware.js";
 
+const cooldowns = new Map(); // Mapa para rastrear cooldowns
+
 const data = new SlashCommandBuilder()
   .setName("roll-pokemon")
   .setDescription("Obtén un paquete de 10 Pokémon por 40 coins.");
@@ -26,6 +28,29 @@ const blueExclusive = [27, 28, 37, 38, 69, 70, 71, 52, 53, 126, 127];
 const starters = [1, 4, 7];
 
 async function execute(interaction) {
+  const userId = interaction.user.id;
+
+  // Verificar cooldown
+  const now = Date.now();
+  const cooldownAmount = 60 * 1000; // 1 minuto en milisegundos
+
+  if (cooldowns.has(userId)) {
+    const expirationTime = cooldowns.get(userId) + cooldownAmount;
+
+    if (now < expirationTime) {
+      const timeLeft = (expirationTime - now) / 1000;
+      await interaction.reply({
+        content: `Por favor, espera ${timeLeft.toFixed(
+          1
+        )} segundos antes de usar este comando nuevamente.`,
+        ephemeral: true,
+      });
+      return;
+    }
+  }
+
+  cooldowns.set(userId, now);
+
   const user = await User.findById(interaction.user.id);
 
   if (!user.catcher) {
@@ -97,10 +122,15 @@ async function execute(interaction) {
 
   try {
     const updatedUser = await User.findOneAndUpdate(
-      { _id: interaction.user.id },
+      { _id: interaction.user.id, coins: { $gte: 40 } }, // Validación para evitar coins negativas
       { $inc: { coins: -40 } },
       { new: true }
     );
+
+    if (!updatedUser) {
+      await interaction.reply("No tienes suficientes coins. Necesitas al menos 40 coins para obtener un paquete de 10 Pokémon.");
+      return;
+    }
 
     const newPokemonPack = [];
     for (const pokemon of pokemonPack) {
