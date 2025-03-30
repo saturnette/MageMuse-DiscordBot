@@ -15,7 +15,8 @@ async function execute(interaction) {
   const embed = new EmbedBuilder()
     .setColor(0xffbf00)
     .setTitle(`Tabla de clasificación / ${serverName}`)
-    .setImage(url);
+    .setImage(url)
+    .setDescription("[Haz click aquí para saber más de los top players](https://palette-dex.vercel.app/)");
 
   await interaction.reply({
     embeds: [embed],
