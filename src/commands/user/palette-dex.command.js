@@ -36,9 +36,10 @@ async function execute(interaction) {
       .setDescription(
         paginatedPokemon
           .map(p => `**#${p.number} ${p.name}** (x${p.count})`)
-          .join("\n")
+          .join("\n") +
+        `\n\n[Mira todos tus Pokémon aquí](${profileLink})`
       )
-      .setFooter({ text: `Página ${page} de ${totalPages} | Visita tu perfil aquí: ${profileLink}` });
+      .setFooter({ text: `Página ${page} de ${totalPages}` });
   };
 
   const generateRow = (page) => {
