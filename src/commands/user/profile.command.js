@@ -64,7 +64,7 @@ async function execute(interaction) {
         name: " ",
         value: `**🎯 Showdown:** ${userInfo.showdownNick || "N/A"}\n**💰 Pokécoins:** ${userInfo.coins || 0}\n**🦄 Compañero:** ${
           userInfo.companionPokemon ? userInfo.companionPokemon.name : "N/A"
-        }\n**🎨 Color Favorito:** ${userInfo.favoriteColor == "blue" ? "Azul" : "Rojo" || "N/A"}`,
+        }\n**🎨 Color Favorito:** ${userInfo.favoriteColor ? userInfo.favoriteColor.charAt(0).toUpperCase() + userInfo.favoriteColor.slice(1) : "N/A"}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
