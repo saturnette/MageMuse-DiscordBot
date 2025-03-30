@@ -177,14 +177,17 @@ async function execute(interaction) {
     const winnerUse = await User.findById(winnerUser._id);
     const loserUse = await User.findById(loserUser._id);
 
-    // Modificar la lógica de coins para evitar valores negativos
-    const winnerEloGain = winnerUse.elo - elow;
-    const loserEloDrop = elol - loserUse.elo;
+    // Modificar la lógica de coins para que siempre se ganen/perdieran 40 Pokecoins
+    const coinsToAdd = 40;
+    const coinsToSubtract = 40;
 
-    winnerUser.coins += winnerEloGain;
+    winnerUser.coins += coinsToAdd;
 
     // Asegurarse de que las coins del perdedor no bajen de cero
-    loserUser.coins = Math.max(0, loserUser.coins - loserEloDrop);
+    loserUser.coins = Math.max(0, loserUser.coins - coinsToSubtract);
+
+    const winnerEloGain = winnerUse.elo - elow;
+    const loserEloDrop = elol - loserUse.elo;
 
     await winnerUser.save();
     await loserUser.save();
@@ -199,7 +202,11 @@ async function execute(interaction) {
       .addFields(
         {
           name: "Cambio de Elo",
-          value: `${winner.username}: + ${winnerEloGain}\n${loser.username}: - ${loserEloDrop}`,
+          value: `${winner.username}: +${winnerEloGain}\n${loser.username}: -${loserEloDrop}`,
+        },
+        {
+          name: "Pokecoins",
+          value: `${winner.username} ganó 40 Pokecoins, ahora tiene ${winnerUser.coins}.\n${loser.username} perdió 40 Pokecoins, ahora tiene ${loserUser.coins}.`,
         },
         { name: "Replay", value: `[Ver repetición](${replayLink})` }
       );
