@@ -43,7 +43,7 @@ async function execute(interaction) {
   await user.save();
 
   await interaction.reply(
-    `El usuario ${userToGive.username} ha recibido un ${pokemonName} exitosamente.`
+    `El usuario ${user.username} ha recibido un ${pokemonName} exitosamente.`
   );
 }
 
