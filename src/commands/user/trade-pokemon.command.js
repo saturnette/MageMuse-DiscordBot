@@ -122,7 +122,7 @@ async function execute(interaction) {
           p.number === theirPokemonNumber ? { ...p, number: evolution.number, name: evolution.name } : p
         );
 
-        evolutionMessage += `¡El Pokémon **${theirPokemon.name}** de ${user1.username} ha evolucionado a **${evolution.name}**!\n`;
+        evolutionMessage += `QUEEEEEEEEEEEE, !**${theirPokemon.name}** ha evolucionado a **${evolution.name}**!\n`;
         evolutionMessage += `![Evolución](${spriteUrl})\n`;
       }
 
@@ -132,7 +132,7 @@ async function execute(interaction) {
       await user2.save();
 
       await i.update({
-        content: `¡Intercambio completado! Has intercambiado tu **${yourPokemon.name}** por el **${theirPokemon.name}** de ${interaction.user.username}.\n\n${evolutionMessage}`,
+        content: `¡Intercambio completado! Has intercambiado tu **${yourPokemon.name}** por el **${theirPokemon.name}**.\n\n${evolutionMessage}`,
         embeds: [],
         components: []
       });
