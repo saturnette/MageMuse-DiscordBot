@@ -3,7 +3,7 @@ import axios from "axios";
 import User from "../../models/user.model.js";
 import { rollChannelOnly } from "../../middlewares/channel.middleware.js";
 
-const cooldowns = new Map(); // Mapa para rastrear cooldowns
+const cooldowns = new Map();
 
 const data = new SlashCommandBuilder()
   .setName("roll-pokemon")
@@ -105,45 +105,45 @@ async function execute(interaction) {
   }
 
   const pokemonPack = [];
+  const pokemonNames = [];
+  let apiError = false;
+
   for (let i = 0; i < 10; i++) {
     const randomId = weightedRandomSelection();
 
     try {
-      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`, { timeout: 5000 });
       const pokemonName = response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1);
       const pokemonImage = response.data.sprites.other["official-artwork"].front_default;
       pokemonPack.push({ id: randomId, name: pokemonName, image: pokemonImage });
+      pokemonNames.push(pokemonName);
     } catch (error) {
-      console.error(error);
-      await interaction.reply("Hubo un error al obtener el paquete de Pokémon.");
-      return;
+      console.error(`Error al obtener el Pokémon con ID ${randomId}:`, error.message);
+      pokemonNames.push(`ID ${randomId}`);
+      apiError = true;
     }
   }
 
+  if (apiError) {
+    await interaction.reply({
+      content: `Hubo un problema al obtener algunos Pokémon. Aquí tienes los nombres:\n${pokemonNames.join(", ")}`,
+      ephemeral: true,
+    });
+    return;
+  }
+
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: interaction.user.id, coins: { $gte: 40 } }, // Validación para evitar coins negativas
-      { $inc: { coins: -40 } },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      await interaction.reply("No tienes suficientes coins. Necesitas al menos 40 coins para obtener un paquete de 10 Pokémon.");
-      return;
-    }
-
     const newPokemonPack = [];
     for (const pokemon of pokemonPack) {
-      const existingPokemon = updatedUser.pokemonCollection.find(p => p.number === pokemon.id);
+      const existingPokemon = user.pokemonCollection.find(p => p.number === pokemon.id);
       if (existingPokemon) {
         existingPokemon.count += 1;
         newPokemonPack.push({ ...pokemon, count: existingPokemon.count });
       } else {
-        updatedUser.pokemonCollection.push({ number: pokemon.id, name: pokemon.name, count: 1 });
+        user.pokemonCollection.push({ number: pokemon.id, name: pokemon.name, count: 1 });
         newPokemonPack.push({ ...pokemon, count: 1, isNew: true });
       }
     }
-    await updatedUser.save();
 
     let currentIndex = 0;
 
@@ -183,6 +183,18 @@ async function execute(interaction) {
 
     await interaction.reply({ embeds: [generateEmbed(currentIndex)], components: [row] });
     const message = await interaction.fetchReply();
+
+    // Si el embed se muestra correctamente, restar las monedas
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: interaction.user.id, coins: { $gte: 40 } },
+      { $inc: { coins: -40 }, $set: { pokemonCollection: user.pokemonCollection } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      await interaction.followUp("No tienes suficientes coins. Necesitas al menos 40 coins para obtener un paquete de 10 Pokémon.");
+      return;
+    }
 
     const filter = i => i.user.id === interaction.user.id;
     const collector = message.createMessageComponentCollector({ filter, time: 60000 });

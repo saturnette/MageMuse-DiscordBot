@@ -49,7 +49,7 @@ async function execute(interaction) {
     return;
   }
 
-  if (yourPokemon.count < 2 || theirPokemon.count < 2) {
+  if (yourPokemon.count < 1 || theirPokemon.count < 1) {
     await interaction.reply("Ambos usuarios deben tener más de una copia del Pokémon que desean intercambiar.");
     return;
   }
