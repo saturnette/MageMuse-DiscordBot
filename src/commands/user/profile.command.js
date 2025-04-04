@@ -17,11 +17,24 @@ async function execute(interaction) {
   const user = interaction.options.getUser("user") || interaction.user;
   await interaction.deferReply();
 
-  const userProfile = await User.findOneAndUpdate(
-    { _id: user.id },
-    { $setOnInsert: { _id: user.id } },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  );
+  // Buscar o crear el perfil del usuario
+  let userProfile = await User.findOne({ _id: user.id });
+  if (!userProfile) {
+    userProfile = new User({
+      _id: user.id,
+      username: user.username,
+      showdownNick: "anonimo",
+      coins: 0,
+      elo: 1000,
+      badges: [],
+      winsLadder: 0,
+      lossesLadder: 0,
+      favoriteColor: null,
+      companionPokemon: null,
+      registered: false,
+    });
+    await userProfile.save();
+  }
 
   const userInfo = await getUserInfo(user.id);
 
@@ -29,7 +42,7 @@ async function execute(interaction) {
 
   const users = await User.find().sort({ elo: -1, _id: 1 });
 
-  const ranking = users.findIndex((user) => user.id === userInfo.id) + 1;
+  const ranking = users.findIndex((u) => u.id === userInfo.id) + 1;
 
   const file = bucket.file(`profiles/${user.id}.png`);
   let url = await file.getSignedUrl({
@@ -53,7 +66,7 @@ async function execute(interaction) {
 
   const exampleEmbed = new EmbedBuilder()
     .setColor(embedColor)
-    .setTitle(`${user.globalName} (${user.username})`)
+    .setTitle(`${user.globalName || user.username} (${user.username})`)
     .setAuthor({
       name: interaction.guild.name,
       iconURL: interaction.guild.iconURL(),
