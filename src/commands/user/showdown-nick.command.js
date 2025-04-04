@@ -24,18 +24,29 @@ async function execute(interaction) {
   }
 
   try {
+    // Buscar al usuario en la base de datos
+    let existingUser = await User.findOne({ _id: user.id });
+
+    // Si no existe, crearlo
+    if (!existingUser) {
+      existingUser = new User({
+        _id: user.id,
+        username: user.username,
+        showdownNick: newNick,
+      });
+      await existingUser.save();
+      await interaction.reply(
+        `¡Usuario creado exitosamente! Nick de Showdown asignado: ${newNick}`
+      );
+      return;
+    }
+
+    // Actualizar el nick del usuario existente
     const updatedUser = await User.findOneAndUpdate(
       { _id: user.id },
       { $set: { showdownNick: newNick } },
       { new: true }
     );
-
-    if (!updatedUser) {
-      await interaction.reply(
-        "No se pudo encontrar tu usuario en la base de datos. Por favor, verifica tu registro."
-      );
-      return;
-    }
 
     await interaction.reply(
       `¡Nick de Showdown actualizado exitosamente para ${user.username}! Nuevo Nick de Showdown: ${updatedUser.showdownNick}`
