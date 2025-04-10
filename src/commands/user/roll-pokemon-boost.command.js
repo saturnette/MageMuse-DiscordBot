@@ -4,7 +4,7 @@ import User from "../../models/user.model.js";
 
 const data = new SlashCommandBuilder()
   .setName("roll-pokemon-boost")
-  .setDescription("Obtén un paquete de 5 Pokémon con probabilidades ajustadas según los coins ingresados.")
+  .setDescription("Obtén un paquete de 10 Pokémon con probabilidades ajustadas según los coins ingresados.")
   .addIntegerOption(option =>
     option.setName("coins")
       .setDescription("Cantidad de coins a invertir (mínimo 40).")
@@ -42,7 +42,7 @@ async function execute(interaction) {
   }
 
   // Ajustar probabilidades según los coins ingresados
-  const boost = Math.min(coins / 1000, 0.3); // Máximo boost de 0.3
+  const boost = Math.min(coins / 1000, 0.5); // Máximo boost de 0.3
   const adjustedProbabilities = Object.fromEntries(
     Object.entries(probabilities).map(([id, prob]) => [id, Math.min(prob + boost, 1)])
   );
@@ -61,7 +61,7 @@ async function execute(interaction) {
   }
 
   const pokemonPack = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     const randomId = weightedRandomSelection();
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
