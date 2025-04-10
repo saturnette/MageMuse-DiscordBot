@@ -95,10 +95,10 @@ const data = new SlashCommandBuilder()
         for (const pokemon of pokemonPack) {
             const existingPokemon = user.pokemonCollection.find(p => p.number === pokemon.number);
             if (existingPokemon) {
-                existingPokemon.count += 1;
+                existingPokemon.count += 1; // Incrementar el count si ya existe
                 newPokemonPack.push({ ...pokemon, count: existingPokemon.count });
             } else {
-                user.pokemonCollection.push({ number: pokemon.number, name: pokemon.name, count: 1 });
+                user.pokemonCollection.push({ number: pokemon.number, name: pokemon.name, count: 1 }); // Agregar nuevo Pokémon
                 newPokemonPack.push({ ...pokemon, count: 1, isNew: true });
             }
         }
