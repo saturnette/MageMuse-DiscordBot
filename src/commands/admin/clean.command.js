@@ -28,15 +28,12 @@ async function execute(interaction) {
 
     // Filtrar y eliminar duplicados
     const validPokemon = user.pokemonCollection.filter(pokemon => pokemon.number); // Eliminar los que no tienen `number`
-    const uniquePokemon = [];
-    const seenNumbers = new Set();
-
-    validPokemon.forEach(pokemon => {
-        if (!seenNumbers.has(pokemon.number)) {
-            uniquePokemon.push(pokemon); // Mantener solo la primera aparición
-            seenNumbers.add(pokemon.number); // Registrar el número como visto
+    const uniquePokemon = validPokemon.reduce((acc, pokemon) => {
+        if (!acc.some(p => p.number === pokemon.number)) {
+            acc.push(pokemon); // Mantener solo la primera aparición
         }
-    });
+        return acc;
+    }, []);
 
     // Actualizar la colección del usuario
     user.pokemonCollection = uniquePokemon;
