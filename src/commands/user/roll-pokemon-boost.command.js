@@ -51,7 +51,7 @@ const data = new SlashCommandBuilder()
                     const pokemonName = response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1);
                     const pokemonImage = response.data.sprites.other["official-artwork"].front_default;
     
-                    pokemonPack.push({ id: randomId, name: pokemonName, image: pokemonImage });
+                    pokemonPack.push({ number: randomId, name: pokemonName, image: pokemonImage });
                 } catch (error) {
                     console.error(`Error al obtener el Pokémon con ID ${randomId}:`, error.message);
                 }
@@ -83,7 +83,7 @@ const data = new SlashCommandBuilder()
                     const pokemonName = response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1);
                     const pokemonImage = response.data.sprites.other["official-artwork"].front_default;
     
-                    pokemonPack.push({ id: randomId, name: pokemonName, image: pokemonImage });
+                    pokemonPack.push({ number: randomId, name: pokemonName, image: pokemonImage });
                 } catch (error) {
                     console.error(`Error al obtener el Pokémon con ID ${randomId}:`, error.message);
                 }
@@ -93,12 +93,12 @@ const data = new SlashCommandBuilder()
         // Actualizar la colección del usuario con los nuevos Pokémon
         const newPokemonPack = [];
         for (const pokemon of pokemonPack) {
-            const existingPokemon = user.pokemonCollection.find(p => p.number === pokemon.id);
+            const existingPokemon = user.pokemonCollection.find(p => p.number === pokemon.number);
             if (existingPokemon) {
                 existingPokemon.count += 1;
                 newPokemonPack.push({ ...pokemon, count: existingPokemon.count });
             } else {
-                user.pokemonCollection.push({ number: pokemon.id, name: pokemon.name, count: 1 });
+                user.pokemonCollection.push({ number: pokemon.number, name: pokemon.name, count: 1 });
                 newPokemonPack.push({ ...pokemon, count: 1, isNew: true });
             }
         }
@@ -111,8 +111,8 @@ const data = new SlashCommandBuilder()
             .setDescription(
                 newPokemonPack
                     .map(p => p.isNew
-                        ? `**#${p.id} ${p.name}** (Nuevo 🎀)`
-                        : `**#${p.id} ${p.name}** (x${p.count})`
+                        ? `**#${p.number} ${p.name}** (Nuevo 🎀)`
+                        : `**#${p.number} ${p.name}** (x${p.count})`
                     )
                     .join("\n")
             )
