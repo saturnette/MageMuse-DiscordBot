@@ -28,16 +28,15 @@ async function execute(interaction) {
 
     // Filtrar y consolidar la colección
     const validPokemon = user.pokemonCollection.filter(pokemon => pokemon.number); // Eliminar los que no tienen `number`
-    const consolidatedPokemon = [];
-
-    validPokemon.forEach(pokemon => {
-        const existing = consolidatedPokemon.find(p => p.number === pokemon.number);
+    const consolidatedPokemon = validPokemon.reduce((acc, pokemon) => {
+        const existing = acc.find(p => p.number === pokemon.number);
         if (existing) {
             existing.count += pokemon.count; // Consolidar duplicados sumando los `count`
         } else {
-            consolidatedPokemon.push({ ...pokemon }); // Agregar Pokémon único
+            acc.push({ ...pokemon }); // Agregar Pokémon único
         }
-    });
+        return acc;
+    }, []);
 
     // Actualizar la colección del usuario
     user.pokemonCollection = consolidatedPokemon;
