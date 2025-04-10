@@ -41,7 +41,6 @@ const data = new SlashCommandBuilder()
         }
     
         let pokemonPack = [];
-        let newPokemon = [];
     
         if (coins > 500) {
             // Selección completamente aleatoria del 1 al 151
@@ -52,18 +51,7 @@ const data = new SlashCommandBuilder()
                     const pokemonName = response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1);
                     const pokemonImage = response.data.sprites.other["official-artwork"].front_default;
     
-                    // Verificar si el Pokémon ya está en la colección
-                    const isNew = !user.pokemonCollection.some(p => p.id === randomId);
-                    if (isNew) {
-                        newPokemon.push({ id: randomId, name: pokemonName });
-                    }
-    
-                    pokemonPack.push({
-                        id: randomId,
-                        name: pokemonName,
-                        image: pokemonImage,
-                        isNew
-                    });
+                    pokemonPack.push({ id: randomId, name: pokemonName, image: pokemonImage });
                 } catch (error) {
                     console.error(`Error al obtener el Pokémon con ID ${randomId}:`, error.message);
                 }
@@ -95,18 +83,7 @@ const data = new SlashCommandBuilder()
                     const pokemonName = response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1);
                     const pokemonImage = response.data.sprites.other["official-artwork"].front_default;
     
-                    // Verificar si el Pokémon ya está en la colección
-                    const isNew = !user.pokemonCollection.some(p => p.id === randomId);
-                    if (isNew) {
-                        newPokemon.push({ id: randomId, name: pokemonName });
-                    }
-    
-                    pokemonPack.push({
-                        id: randomId,
-                        name: pokemonName,
-                        image: pokemonImage,
-                        isNew
-                    });
+                    pokemonPack.push({ id: randomId, name: pokemonName, image: pokemonImage });
                 } catch (error) {
                     console.error(`Error al obtener el Pokémon con ID ${randomId}:`, error.message);
                 }
@@ -114,20 +91,32 @@ const data = new SlashCommandBuilder()
         }
     
         // Actualizar la colección del usuario con los nuevos Pokémon
-        newPokemon.forEach(pokemon => {
-            user.pokemonCollection.push(pokemon);
-        });
+        const newPokemonPack = [];
+        for (const pokemon of pokemonPack) {
+            const existingPokemon = user.pokemonCollection.find(p => p.number === pokemon.id);
+            if (existingPokemon) {
+                existingPokemon.count += 1;
+                newPokemonPack.push({ ...pokemon, count: existingPokemon.count });
+            } else {
+                user.pokemonCollection.push({ number: pokemon.id, name: pokemon.name, count: 1 });
+                newPokemonPack.push({ ...pokemon, count: 1, isNew: true });
+            }
+        }
+    
         await user.save();
     
         const embed = new EmbedBuilder()
             .setColor(0xffbf00)
             .setTitle("¡Paquete de Pokémon!")
             .setDescription(
-                pokemonPack
-                    .map(p => `**#${p.id} ${p.name}** ${p.isNew ? "🎀 *Nuevo*" : ""}`)
+                newPokemonPack
+                    .map(p => p.isNew
+                        ? `**#${p.id} ${p.name}** (Nuevo 🎀)`
+                        : `**#${p.id} ${p.name}** (x${p.count})`
+                    )
                     .join("\n")
             )
-            .setImage(pokemonPack[0]?.image || null);
+            .setImage(newPokemonPack[0]?.image || null);
     
         await User.findByIdAndUpdate(userId, { $inc: { coins: -coins } });
         await interaction.reply({ embeds: [embed] });
