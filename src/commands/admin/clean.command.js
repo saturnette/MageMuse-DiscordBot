@@ -26,20 +26,20 @@ async function execute(interaction) {
         return;
     }
 
-    // Filtrar y consolidar la colección
+    // Filtrar y eliminar duplicados
     const validPokemon = user.pokemonCollection.filter(pokemon => pokemon.number); // Eliminar los que no tienen `number`
-    const consolidatedPokemon = validPokemon.reduce((acc, pokemon) => {
-        const existing = acc.find(p => p.number === pokemon.number);
-        if (existing) {
-            existing.count += pokemon.count; // Consolidar duplicados sumando los `count`
-        } else {
-            acc.push({ ...pokemon }); // Agregar Pokémon único
+    const uniquePokemon = [];
+    const seenNumbers = new Set();
+
+    validPokemon.forEach(pokemon => {
+        if (!seenNumbers.has(pokemon.number)) {
+            uniquePokemon.push(pokemon); // Mantener solo la primera aparición
+            seenNumbers.add(pokemon.number); // Registrar el número como visto
         }
-        return acc;
-    }, []);
+    });
 
     // Actualizar la colección del usuario
-    user.pokemonCollection = consolidatedPokemon;
+    user.pokemonCollection = uniquePokemon;
     await user.save();
 
     await interaction.reply(`La colección de Pokémon de ${targetUser.tag} ha sido limpiada. Ahora tiene ${user.pokemonCollection.length} entradas únicas.`);
