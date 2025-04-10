@@ -176,22 +176,31 @@ async function execute(interaction) {
 
     const winnerUse = await User.findById(winnerUser._id);
     const loserUse = await User.findById(loserUser._id);
-
-    // Modificar la lógica de coins para que siempre se ganen/perdieran 40 Pokecoins
-    const coinsToAdd = 40;
-    const coinsToSubtract = 40;
-
+    
+    let coinsToAdd = 40;
+    let coinsToSubtract = 40;
+    
+    // Si el ganador tiene más de 1000 coins, solo gana 10
+    if (winnerUser.coins > 1000) {
+      coinsToAdd = 10;
+    }
+    
+    // Si el perdedor tiene más de 1000 coins, pierde 500 en lugar de 40
+    if (loserUser.coins > 1000) {
+      coinsToSubtract = 500;
+    }
+    
     winnerUser.coins += coinsToAdd;
-
+    
     // Asegurarse de que las coins del perdedor no bajen de cero
     loserUser.coins = Math.max(0, loserUser.coins - coinsToSubtract);
-
+    
     const winnerEloGain = winnerUse.elo - elow;
     const loserEloDrop = elol - loserUse.elo;
-
+    
     await winnerUser.save();
     await loserUser.save();
-
+    
     const embed = new EmbedBuilder()
       .setColor(0xffbf00)
       .setTitle(`Resultado: ${winner.username} Vs. ${loser.username}`)
