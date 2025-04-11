@@ -8,7 +8,7 @@ const data = new SlashCommandBuilder()
     .setDescription("Obtén un paquete de 5 Pokémon con probabilidades ajustadas según los coins ingresados.")
     .addIntegerOption(option =>
         option.setName("coins")
-            .setDescription("Cantidad de coins a invertir (mínimo 100).")
+            .setDescription("Cantidad de coins a invertir (mínimo 200).")
             .setRequired(true)
     );
 
@@ -28,8 +28,8 @@ const data = new SlashCommandBuilder()
         const userId = interaction.user.id;
         const coins = interaction.options.getInteger("coins");
     
-        if (coins < 100) {
-            await interaction.reply("Debes invertir al menos 100 coins para usar este comando.");
+        if (coins < 250) {
+            await interaction.reply("Debes invertir al menos 250 coins para usar este comando.");
             return;
         }
     
