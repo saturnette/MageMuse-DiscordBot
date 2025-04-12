@@ -66,10 +66,18 @@ async function execute(interaction) {
 
     // Inicializar el progreso del Bo3 para este líder si no existe
     if (!challenger.bo3Progress.has(leaderId)) {
-      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
+      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0, completed: false });
     }
 
     const bo3 = challenger.bo3Progress.get(leaderId);
+
+    // Verificar si el retador ya ganó el Bo3
+    if (bo3.completed) {
+      await interaction.followUp(
+        `¡<@${recipientUser.id}> ya ganó el Bo3 contra <@${leaderId}> y tiene la medalla!`
+      );
+      return;
+    }
 
     // Actualizar el marcador del Bo3
     if (result === "win") {
@@ -84,7 +92,7 @@ async function execute(interaction) {
     // Verificar si alguien ganó el Bo3
     if (bo3.leaderWins === 2) {
       // El líder gana el Bo3
-      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
+      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0, completed: false });
       await leader.save();
       await challenger.save();
 
@@ -94,7 +102,9 @@ async function execute(interaction) {
       return;
     } else if (bo3.challengerWins === 2) {
       // El retador gana el Bo3 y obtiene la medalla
-      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
+      bo3.completed = true; // Marcar el Bo3 como completado
+      bo3.leaderWins = 0;
+      bo3.challengerWins = 0;
 
       const badgeGiven = await giveBadge(
         recipientUser.id,
