@@ -2,7 +2,7 @@ import cron from "node-cron";
 import User from "../models/user.model.js";
 
 cron.schedule(
-  "0 0 * * *",
+  "0 0 * * *", 
   async function () {
     try {
       await User.updateMany({}, { tryDay: 0 });
@@ -13,6 +13,6 @@ cron.schedule(
   },
   {
     scheduled: true,
-    timezone: "America/Tegucigalpa",
+    timezone: "America/New_York", 
   }
 );
