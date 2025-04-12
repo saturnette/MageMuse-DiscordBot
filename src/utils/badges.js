@@ -1,72 +1,72 @@
 export const badgesImages = {
-  Fogón: {
+  Paleta: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffire.png?alt=media&token=671e3ace-afec-42b5-8c84-6782dc8cee7b",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormal.png?alt=media&token=50fbf035-09e1-4330-8d83-bb090bf60ce7",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffire_siluette.png?alt=media&token=8df7b0cd-c657-4ced-a92d-4b0cfc3488e7",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fnormal_silueta.png?alt=media&token=72c346cc-e98b-4bc4-8387-6203d018fdb8"
   },
 
-  Lunar: {
+  Freedom: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffairy.png?alt=media&token=ddb7ee17-85f6-4eb3-9240-ebb221367b48",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fflying.png?alt=media&token=d9c902fc-bc8b-4c88-91da-d010f9760fc2",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffairy_siluette.png?alt=media&token=dc0d0fdc-ea39-4cc6-bd71-27ea2ca8cb97",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fflying_silueta.png?alt=media&token=57fa24a7-2311-40c0-9e46-93391139fa45"
   },
 
-  Fleur: {
+  Venenin: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fgrass.png?alt=media&token=8db7eb78-bb7d-4138-9471-0ee1d7b5c349",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpoison.png?alt=media&token=7d7d18f9-b1e0-4346-b9e3-daa8d2cb594a",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fgrass_siluette.png?alt=media&token=067bf1f2-04bb-4f51-b52c-9e9a58276c5a",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpoison_silueta.png?alt=media&token=38d281f0-172f-44d0-80fb-ef24aaaefc88"
   },
 
-  Mitológica: {
+  Divergente: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdragon.png?alt=media&token=cd5e43b6-635f-4ea1-9296-9f8958ef790d",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fground.png?alt=media&token=cbb12a8b-ce0e-4f00-bdb4-2344232a0883",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdragon_siluette.png?alt=media&token=ea64a064-2137-43b9-a886-0f7992e5d516",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fground_silueta.png?alt=media&token=b9edfb58-0c89-4047-9e60-1b11ed6b405d"
   },
 
-  YinYang: {
+  Adamantium: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdarkpsy.png?alt=media&token=38e01f26-67e2-4f40-8d49-91f41685765e",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsteel.png?alt=media&token=2d1a0b27-dbaa-4be0-8ba5-668bf711a7b3",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdarkpsy_siluette.png?alt=media&token=78f02bf1-0914-42f4-967d-1bbcd800932d",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsteel_silueta.png?alt=media&token=d65cf493-3955-49c1-8117-5c2f3daf6b75"
   },
 
-  Motivo: {
+  Herbe: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fbug.png?alt=media&token=c3742325-6717-4e19-8918-bdd5b6939735",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fgrass.png?alt=media&token=f11eeb9e-fb55-42cd-8ee5-1a59ddf17053",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fbug_siluette.png?alt=media&token=ce2d1ca2-9b2f-47da-a75e-78c45b6948e2",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fgrass_silueta.png?alt=media&token=c2f3d923-05a6-499a-8d84-108ae30335f6"
   },
 
-  Afin: {
+  Tesla: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fflying.png?alt=media&token=c816d5a2-3205-45f2-8d28-be00543554ff",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Felectric.png?alt=media&token=d6d84c7f-c91b-4e75-aa11-e9b2feb560a3",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fflying_siluette.png?alt=media&token=4928ed12-5e6f-46c7-bb97-363b43f0383d",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Felectric_silueta.png?alt=media&token=d3b026e5-6311-474b-890f-af3db4445858"
   },
 
-  Toxina: {
+  Rugido: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpoison.png?alt=media&token=15846bca-49b2-4e37-b4a9-729dbe8e2cce",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdragon.png?alt=media&token=e4753f4e-0f7b-4f4f-91cb-c77096d56c22",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fpoison_siluette.png?alt=media&token=6227298c-9e24-4d34-a082-429ca6a8f838",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdragon_silueta.png?alt=media&token=d909fb55-89d1-48af-841b-01aad7ce75f7"
   },
 
-  Océano: {
+  Nyxia: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fwater.png?alt=media&token=ae4fc680-243d-4ee6-a587-5e3690f5b77c",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdark.png?alt=media&token=041836c4-450f-48a1-8ed6-93c418c72673",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fwater_siluette.png?alt=media&token=9196d415-52c4-4ed4-9343-071182bf0d4d",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fdark_silueta.png?alt=media&token=fea46122-9058-40de-8be5-fe4b4f2181f6"
   },
 
-  Filo: {
+  King: {
     normal:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsteel.png?alt=media&token=50521b3a-bf30-467d-bed8-723e5d1c5991",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffairy.png?alt=media&token=75c540cd-0d05-45a2-b9b9-6f7d755c84a5",
     silhouette:
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Fsteel_siluette.png?alt=media&token=e07ab77b-5aee-44b9-9b1b-9366caee0cd8",
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/badges%2Ffairy_silueta.png?alt=media&token=59bcbcd1-5637-4f64-9539-18dbbdc8866b"
   },
 };
 
@@ -90,16 +90,16 @@ export function getBackgroundImageUrl(numBadges) {
 
   if (numBadges < 5) {
     backgroundImageUrl =
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg1.png?alt=media&token=b5d65c15-99d4-48e5-8dfd-b4858cc28cf1";
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg1.png?alt=media&token=dd4f9456-b9a6-45f5-96f8-1bf7340f7677";
   } else if (numBadges >= 5 && numBadges <= 7) {
     backgroundImageUrl =
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg2.png?alt=media&token=f7d2e07b-b06e-408f-86d3-609251f03a91";
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg2.png?alt=media&token=c258acd1-a240-4580-bc84-bef73db5cd46";
   } else if (numBadges >= 8 && numBadges <= 9) {
     backgroundImageUrl =
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg3.png?alt=media&token=bc115b2b-0806-4b42-9dae-db38084659bf";
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg3.png?alt=media&token=c156359f-3629-44cf-8875-c8889b49291c";
   } else if (numBadges == 10) {
     backgroundImageUrl =
-      "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg4.png?alt=media&token=645f80a1-3dc7-439c-90e7-920a4566e51f";
+    "https://firebasestorage.googleapis.com/v0/b/mawi-bot.appspot.com/o/templates%2Fbg4.png?alt=media&token=dc8a7352-1c02-49f5-bb80-ac73e6cae29c"
   }
 
   return backgroundImageUrl;
