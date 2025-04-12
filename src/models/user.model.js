@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema({
     moon: { type: Number, default: 0 },
   },
   linkCable: { type: Number, default: 0 },
+  bo3Progress: {
+    type: Map,
+    of: {
+      leaderWins: { type: Number, default: 0 },
+      challengerWins: { type: Number, default: 0 },
+    },
+    default: {},
+  },
 });
 
 export default mongoose.model("User", userSchema);

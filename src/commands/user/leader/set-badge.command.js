@@ -64,21 +64,27 @@ async function execute(interaction) {
       throw new Error("El retador ya ha realizado sus cinco intentos de hoy.");
     }
 
+    // Inicializar el progreso del Bo3 para este líder si no existe
+    if (!challenger.bo3Progress.has(leaderId)) {
+      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
+    }
+
+    const bo3 = challenger.bo3Progress.get(leaderId);
+
     // Actualizar el marcador del Bo3
     if (result === "win") {
-      leader.bo3LeaderWins += 1;
+      bo3.leaderWins += 1;
     } else if (result === "lose") {
-      challenger.bo3ChallengerWins += 1;
+      bo3.challengerWins += 1;
     }
 
     // Incrementar el contador de intentos del retador
     challenger.tryDay += 1;
 
     // Verificar si alguien ganó el Bo3
-    if (leader.bo3LeaderWins === 2) {
+    if (bo3.leaderWins === 2) {
       // El líder gana el Bo3
-      leader.bo3LeaderWins = 0;
-      challenger.bo3ChallengerWins = 0;
+      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
       await leader.save();
       await challenger.save();
 
@@ -86,10 +92,9 @@ async function execute(interaction) {
         `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}>! El contador del retador se ha reiniciado.`
       );
       return;
-    } else if (challenger.bo3ChallengerWins === 2) {
+    } else if (bo3.challengerWins === 2) {
       // El retador gana el Bo3 y obtiene la medalla
-      leader.bo3LeaderWins = 0;
-      challenger.bo3ChallengerWins = 0;
+      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0 });
 
       const badgeGiven = await giveBadge(
         recipientUser.id,
@@ -114,11 +119,12 @@ async function execute(interaction) {
     }
 
     // Guardar los cambios si aún no se ha decidido el Bo3
+    challenger.bo3Progress.set(leaderId, bo3);
     await leader.save();
     await challenger.save();
 
     await interaction.followUp(
-      `Marcador actualizado: <@${leaderId}> (${leader.bo3LeaderWins}) - <@${recipientUser.id}> (${challenger.bo3ChallengerWins}).`
+      `Marcador actualizado: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
     );
   } catch (error) {
     console.error(error);
