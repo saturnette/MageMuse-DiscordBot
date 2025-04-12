@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
   favoriteColor: { type: String, enum: ['blue', 'red'], default: null },
   companionPokemon: { type: pokemonSchema, default: null },
   companionBattles: { type: Number, default: 0 },
+  bo3LeaderWins: { type: Number, default: 0 },
+  bo3ChallengerWins: { type: Number, default: 0 },
   badges: [
     {
       badgeName: String,
