@@ -1,8 +1,9 @@
 import User from "../../../models/user.model.js";
 import { logChannelOnly } from "../../../middlewares/channel.middleware.js";
 import { leaderRoleOnly } from "../../../middlewares/rol.middleware.js";
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { generateAndSaveProfileImage } from "../../../utils/image-generator.js";
+import fetch from "node-fetch"; // Para realizar solicitudes a la PokéAPI
 
 const cooldowns = new Map(); // Mapa para rastrear los tiempos de espera
 
@@ -97,7 +98,7 @@ async function execute(interaction) {
       await challenger.save();
 
       await interaction.followUp(
-        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}>! El contador del retador se ha reiniciado.`
+        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio!`
       );
       return;
     } else if (bo3.challengerWins === 2) {
@@ -114,11 +115,40 @@ async function execute(interaction) {
 
       if (badgeGiven) {
         leader.loses += 1;
+
+        // Verificar el número de medallas del retador
+        const numBadges = challenger.badges.length;
+
+        let extraMessage = "";
+
+        if (numBadges === 5) {
+          // Agregar Mewtwo a la colección
+          challenger.pokemonCollection.push({ number: 150, name: "Mewtwo", count: 1 });
+          extraMessage += " ¡Has obtenido un **Mewtwo** por alcanzar 5 medallas!";
+          await sendPokemonEmbed(interaction, "Mewtwo", 150);
+        }
+
+        if (numBadges === 8) {
+          // Otorgar un ticket al Alto Mando
+          challenger.tryEF += 1;
+          extraMessage += " ¡Has obtenido un **ticket** 🎫 para retar al Alto Mando!";
+        }
+
+        if (numBadges === 10) {
+          // Agregar Mew a la colección y otorgar otro ticket
+          challenger.pokemonCollection.push({ number: 151, name: "Mew", count: 1 });
+          challenger.tryEF += 1;
+          extraMessage +=
+            " ¡Has obtenido un **Mew** ✨ y otro **ticket** 🎫 para retar al Alto Mando! Haz completado las 10 medallas ¡Eres un gran entrenador!";
+          await sendPokemonEmbed(interaction, "Mew", 151);
+        }
+
         await leader.save();
+        await challenger.save();
         await generateAndSaveProfileImage(recipientUser.id);
 
         await interaction.followUp(
-          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**!`
+          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**!${extraMessage}`
         );
       } else {
         await interaction.followUp(
@@ -139,6 +169,24 @@ async function execute(interaction) {
   } catch (error) {
     console.error(error);
     await interaction.followUp(error.message);
+  }
+}
+
+async function sendPokemonEmbed(interaction, pokemonName, pokemonNumber) {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`);
+    const data = await response.json();
+    const spriteUrl = data.sprites.front_default;
+
+    const embed = new EmbedBuilder()
+      .setTitle(`¡Has obtenido a ${pokemonName}!`)
+      .setImage(spriteUrl)
+      .setColor(0xffcc00)
+      .setFooter({ text: "¡Sigue coleccionando medallas para obtener más recompensas!" });
+
+    await interaction.followUp({ embeds: [embed] });
+  } catch (error) {
+    console.error(`Error al obtener el sprite de ${pokemonName}:`, error);
   }
 }
 
