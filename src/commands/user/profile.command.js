@@ -89,9 +89,10 @@ async function execute(interaction) {
         }%`,
         inline: true,
       },
+      { name: "\u200B", value: "Usa el comando **/badges** para ver tu medallero." },
       {
         name: "🔗 Perfil",
-        value: `[Ver perfil completo](${profileLink})`,
+        value: `[Mira todos tus pokémon haciendo click aquí](${profileLink})`,
         inline: false,
       }
     )
