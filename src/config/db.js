@@ -5,7 +5,7 @@ export const connectWithRetry = async () => {
     await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      autoIndex: false, // Deshabilita la creación automática de índices
+      autoIndex: false, 
     });
     console.log("MongoDB connected successfully");
   } catch (error) {
