@@ -63,7 +63,7 @@ async function execute(interaction) {
     }
 
     if (challenger.tryDay >= 4) {
-      throw new Error("El retador ya ha realizado sus cuatro intentos de hoy.");
+      throw new Error("El retador ya ha realizado sus cuatro intentos de hoy. Batalla invalida.");
     }
 
     // Inicializar el progreso del Bo3 para este líder si no existe
@@ -119,7 +119,7 @@ async function execute(interaction) {
       await challenger.save();
 
       await interaction.followUp(
-        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio!`
+        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio! Tremenda cabra 🐐.`
       );
       return;
     } else if (bo3.challengerWins === 2) {
