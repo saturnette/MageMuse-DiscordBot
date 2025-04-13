@@ -93,6 +93,7 @@ async function execute(interaction) {
     // Verificar si alguien ganó el Bo3
     if (bo3.leaderWins === 2) {
       // El líder gana el Bo3
+      leader.wins += 1;
       challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0, completed: false });
       await leader.save();
       await challenger.save();
