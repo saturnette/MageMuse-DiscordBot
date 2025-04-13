@@ -38,7 +38,8 @@ async function execute(interaction) {
   const now = Date.now();
   const cooldown = cooldowns.get(leaderId);
 
-  if (cooldown && now - cooldown < 60000) { // 60000 ms = 1 minuto
+  if (cooldown && now - cooldown < 60000) {
+    // 60000 ms = 1 minuto
     const remainingTime = Math.ceil((60000 - (now - cooldown)) / 1000);
     await interaction.followUp(
       `Debes esperar ${remainingTime} segundos antes de volver a usar este comando.`
@@ -67,7 +68,11 @@ async function execute(interaction) {
 
     // Inicializar el progreso del Bo3 para este líder si no existe
     if (!challenger.bo3Progress.has(leaderId)) {
-      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0, completed: false });
+      challenger.bo3Progress.set(leaderId, {
+        leaderWins: 0,
+        challengerWins: 0,
+        completed: false,
+      });
     }
 
     const bo3 = challenger.bo3Progress.get(leaderId);
@@ -90,11 +95,25 @@ async function execute(interaction) {
     // Incrementar el contador de intentos del retador
     challenger.tryDay += 1;
 
+    // Clonar y actualizar bo3Progress
+    const updatedBo3Progress = new Map(challenger.bo3Progress);
+    updatedBo3Progress.set(leaderId, bo3);
+    challenger.bo3Progress = updatedBo3Progress;
+
+    // Indicar que bo3Progress fue modificado
+    challenger.markModified("bo3Progress");
+
     // Verificar si alguien ganó el Bo3
     if (bo3.leaderWins === 2) {
       // El líder gana el Bo3
-      leader.wins += 1;
-      challenger.bo3Progress.set(leaderId, { leaderWins: 0, challengerWins: 0, completed: false });
+      updatedBo3Progress.set(leaderId, {
+        leaderWins: 0,
+        challengerWins: 0,
+        completed: false,
+      });
+      challenger.bo3Progress = updatedBo3Progress;
+      challenger.markModified("bo3Progress");
+
       await leader.save();
       await challenger.save();
 
@@ -107,6 +126,10 @@ async function execute(interaction) {
       bo3.completed = true; // Marcar el Bo3 como completado
       bo3.leaderWins = 0;
       bo3.challengerWins = 0;
+
+      updatedBo3Progress.set(leaderId, bo3);
+      challenger.bo3Progress = updatedBo3Progress;
+      challenger.markModified("bo3Progress");
 
       const badgeGiven = await giveBadge(
         recipientUser.id,
@@ -124,20 +147,30 @@ async function execute(interaction) {
 
         if (numBadges === 5) {
           // Agregar Mewtwo a la colección
-          challenger.pokemonCollection.push({ number: 150, name: "Mewtwo", count: 1 });
-          extraMessage += " ¡Has obtenido un **Mewtwo** por alcanzar 5 medallas!";
+          challenger.pokemonCollection.push({
+            number: 150,
+            name: "Mewtwo",
+            count: 1,
+          });
+          extraMessage +=
+            " ¡Has obtenido un **Mewtwo** por alcanzar 5 medallas!";
           await sendPokemonEmbed(interaction, "Mewtwo", 150);
         }
 
         if (numBadges === 8) {
           // Otorgar un ticket al Alto Mando
           challenger.tryEF += 1;
-          extraMessage += " ¡Has obtenido un **ticket** 🎫 para retar al Alto Mando!";
+          extraMessage +=
+            " ¡Has obtenido un **ticket** 🎫 para retar al Alto Mando!";
         }
 
         if (numBadges === 10) {
           // Agregar Mew a la colección y otorgar otro ticket
-          challenger.pokemonCollection.push({ number: 151, name: "Mew", count: 1 });
+          challenger.pokemonCollection.push({
+            number: 151,
+            name: "Mew",
+            count: 1,
+          });
           challenger.tryEF += 1;
           extraMessage +=
             " ¡Has obtenido un **Mew** ✨ y otro **ticket** 🎫 para retar al Alto Mando! Haz completado las 10 medallas ¡Eres un gran entrenador!";
@@ -160,13 +193,13 @@ async function execute(interaction) {
     }
 
     // Guardar los cambios si aún no se ha decidido el Bo3
-    challenger.bo3Progress.set(leaderId, bo3);
     await leader.save();
     await challenger.save();
 
     await interaction.followUp(
       `Marcador actualizado: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
     );
+    
   } catch (error) {
     console.error(error);
     await interaction.followUp(error.message);
@@ -175,7 +208,9 @@ async function execute(interaction) {
 
 async function sendPokemonEmbed(interaction, pokemonName, pokemonNumber) {
   try {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`);
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`
+    );
     const data = await response.json();
     const spriteUrl = data.sprites.front_default;
 
@@ -183,7 +218,9 @@ async function sendPokemonEmbed(interaction, pokemonName, pokemonNumber) {
       .setTitle(`¡Has obtenido a ${pokemonName}!`)
       .setImage(spriteUrl)
       .setColor(0xffcc00)
-      .setFooter({ text: "¡Sigue coleccionando medallas para obtener más recompensas!" });
+      .setFooter({
+        text: "¡Sigue coleccionando medallas para obtener más recompensas!",
+      });
 
     await interaction.followUp({ embeds: [embed] });
   } catch (error) {
