@@ -113,6 +113,7 @@ async function execute(interaction) {
       });
       challenger.bo3Progress = updatedBo3Progress;
       challenger.markModified("bo3Progress");
+      leader.wins += 1;
 
       await leader.save();
       await challenger.save();
