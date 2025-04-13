@@ -62,8 +62,8 @@ async function execute(interaction) {
       throw new Error("El retador no está registrado.");
     }
 
-    if (challenger.tryDay >= 4) {
-      throw new Error("El retador ya ha realizado sus cuatro intentos de hoy. Batalla invalida.");
+    if (challenger.tryDay >= 5) {
+      throw new Error("El retador ya ha realizado sus cinco intentos de hoy. Tiene que esperar hasta mañana, batalla invalida.");
     }
 
     // Inicializar el progreso del Bo3 para este líder si no existe
