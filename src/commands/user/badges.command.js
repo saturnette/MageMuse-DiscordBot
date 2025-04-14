@@ -36,17 +36,17 @@ async function execute(interaction) {
   const embed = new EmbedBuilder()
     .setColor(0xffbf00)
     .setTitle(`Medallero de ${user.globalName || user.username}`)
+    .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 512 })) // Agregar avatar del usuario
     .addFields(
       {
         name: "Estadísticas de Liga",
         value: `**🎟️ Alto Mando:** ${
           userProfile.tryEF || "N/A"
-        }\n**🔄 Retos Usados:** ${userProfile.tryDay || 0}\n**📝 Registrado:** ${
+        }\n**🔄 Retos Usados:** ${userProfile.tryDay || 0}/5\n**📝 Registrado:** ${
           userProfile.registered ? "Sí" : "No"
         }`,
         inline: true,
       },
-      { name: "\u200B", value: "\u200B" },
       {
         name: "🏅 Medallas Obtenidas:",
         value:
