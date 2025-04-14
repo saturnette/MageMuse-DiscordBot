@@ -47,6 +47,7 @@ async function execute(interaction) {
         }`,
         inline: true,
       },
+      { name: "\u200B", value: "\u200B" },
       {
         name: "🏅 Medallas Obtenidas:",
         value:
