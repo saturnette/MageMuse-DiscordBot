@@ -63,7 +63,9 @@ async function execute(interaction) {
     }
 
     if (challenger.tryDay >= 5) {
-      throw new Error("El retador ya ha realizado sus cinco intentos de hoy. Tiene que esperar hasta mañana, batalla invalida.");
+      throw new Error(
+        "El retador ya ha realizado sus cinco intentos de hoy. Tiene que esperar hasta mañana, batalla inválida, el líder decide si se cuenta o no."
+      );
     }
 
     // Inicializar el progreso del Bo3 para este líder si no existe
@@ -102,6 +104,13 @@ async function execute(interaction) {
 
     // Indicar que bo3Progress fue modificado
     challenger.markModified("bo3Progress");
+
+    // Verificar si el marcador está empatado
+    if (bo3.leaderWins === bo3.challengerWins && bo3.leaderWins > 0) {
+      await interaction.followUp(
+        `¡El marcador está empatado! <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}). ¡La próxima batalla será decisiva! 🔥`
+      );
+    }
 
     // Verificar si alguien ganó el Bo3
     if (bo3.leaderWins === 2) {
@@ -200,7 +209,6 @@ async function execute(interaction) {
     await interaction.followUp(
       `Marcador actualizado: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
     );
-    
   } catch (error) {
     console.error(error);
     await interaction.followUp(error.message);
