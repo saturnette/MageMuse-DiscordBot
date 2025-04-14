@@ -42,7 +42,7 @@ async function execute(interaction) {
     );
 
     await interaction.reply(
-          `¡Pokémon eliminado exitosamente de tu equipo! \n\nNuevo equipo:\n ${updatedUser.team.join(
+          `¡Pokémon eliminado exitosamente de tu equipo! \n\nNuevo equipo:\n${updatedUser.team.join(
         ", "
       )}`
     );
