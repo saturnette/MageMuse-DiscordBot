@@ -85,7 +85,7 @@ async function execute(interaction) {
     );
 
     await interaction.reply(
-      `¡Pokémon añadido exitosamente a tu equipo! Ahora tienes **${updatedUser.team.length}** pokémon en tu equipo.\n\nPuedes eliminar un Pokémon con el comando **/remove-pokemon**, además, si ya tienes los 12 pokémon puedes registrarte con **/register-team**\n\nEquipo:\n ${updatedUser.team.join(", ")}`
+      `¡Pokémon añadido exitosamente a tu equipo! Ahora tienes **${updatedUser.team.length}** pokémon en tu equipo.\n\n- Puedes eliminar un Pokémon con el comando **/remove-pokemon**\n -Si ya tienes los 12 pokémon puedes registrarte con **/register-team**\n\nEquipo:\n${updatedUser.team.join(", ")}`
     );
   } catch (error) {
     console.error(error);
