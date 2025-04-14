@@ -53,7 +53,7 @@ async function execute(interaction) {
     await challenger.save();
 
     await interaction.followUp(
-      `El progreso del Bo3 entre <@${leaderId}> y <@${recipientUser.id}> ha sido eliminado. Se han restado **${totalAttempts}** intentos del contador de <@${recipientUser.id}>.`
+      `El progreso del Bo3 entre <@${leaderId}> y <@${recipientUser.id}> ha sido eliminado.`
     );
   } catch (error) {
     console.error(error);
