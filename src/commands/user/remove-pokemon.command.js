@@ -22,7 +22,7 @@ async function execute(interaction) {
 
   if (user.registered) {
     await interaction.reply(
-      "Ya estás registrado en la liga y no puedes eliminar ningún Pokémon de tu equipo. Debiste leer mi mensaje... :nazunastare: "
+      "Ya estás registrado en la liga y no puedes eliminar ningún Pokémon de tu equipo. Debiste leer mi mensaje... 😖"
     );
     return;
   }

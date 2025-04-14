@@ -183,7 +183,7 @@ async function execute(interaction) {
         await generateAndSaveProfileImage(recipientUser.id);
 
         await interaction.followUp(
-          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga :oshawottamazed: ${extraMessage}`
+          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga 🐢. ${extraMessage}`
         );
       } else {
         await interaction.followUp(

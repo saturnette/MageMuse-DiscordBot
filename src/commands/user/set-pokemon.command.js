@@ -57,7 +57,7 @@ async function execute(interaction) {
 
   if (user.registered) {
     await interaction.reply(
-      "Ya estás registrado en la liga y no puedes agregar ningún Pokémon a tu equipo... Debiste leer mi mensaje... :nazunastare: "
+      "Ya estás registrado en la liga y no puedes agregar ningún Pokémon a tu equipo... Debiste leer mi mensaje... 😖"
     );
     return;
   }
