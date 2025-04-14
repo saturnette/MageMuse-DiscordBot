@@ -22,7 +22,7 @@ async function execute(interaction) {
 
   if (user.registered) {
     await interaction.reply(
-      "Ya estás registrado en la liga y no puedes eliminar ningún Pokémon de tu equipo."
+      "Ya estás registrado en la liga y no puedes eliminar ningún Pokémon de tu equipo. Debiste leer mi mensaje... :nazunastare: "
     );
     return;
   }
@@ -42,7 +42,7 @@ async function execute(interaction) {
     );
 
     await interaction.reply(
-      `¡Pokémon eliminado exitosamente de tu equipo! Nuevo equipo: ${updatedUser.team.join(
+          `¡Pokémon eliminado exitosamente de tu equipo! \n\nNuevo equipo:\n ${updatedUser.team.join(
         ", "
       )}`
     );
