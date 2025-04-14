@@ -22,8 +22,8 @@ const data = new SlashCommandBuilder()
       .setDescription("¿Ganaste o perdiste?")
       .setRequired(true)
       .addChoices(
-        { name: "Win", value: "win" },
-        { name: "Lose", value: "lose" }
+        { name: "Yo gané :)", value: "win" },
+        { name: "Yo perdí :(", value: "lose" }
       )
   );
 
