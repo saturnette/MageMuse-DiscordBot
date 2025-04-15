@@ -8,7 +8,7 @@ const data = new SlashCommandBuilder()
     .setDescription("Obtén un paquete de 5 Pokémon con probabilidades ajustadas según los coins ingresados.")
     .addIntegerOption(option =>
         option.setName("coins")
-            .setDescription("Cantidad de coins a invertir (mínimo 200).")
+            .setDescription("Cantidad de coins a invertir (mínimo 250).")
             .setRequired(true)
     );
 
