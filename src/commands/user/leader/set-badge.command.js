@@ -8,7 +8,7 @@ import fetch from "node-fetch"; // Para realizar solicitudes a la PokéAPI
 const cooldowns = new Map(); 
 
 const leaderPhrases = [
-  "¡El líder se impone' 👑",
+  "¡El líder se impone! 👑",
   "¡El líder pone orden! 🔥",
   "¡Dome líder dome! 🗣️",
   "Gimnasio protegido 🏰",
@@ -110,7 +110,7 @@ async function execute(interaction) {
       bo3.leaderWins += 1;
       const randomPhrase = leaderPhrases[Math.floor(Math.random() * leaderPhrases.length)];
       await interaction.followUp(
-        `${randomPhrase}: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+        `${randomPhrase} <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
       );
     } else if (result === "lose") {
       bo3.challengerWins += 1;
