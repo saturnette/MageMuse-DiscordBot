@@ -3,27 +3,9 @@ import { logChannelOnly } from "../../../middlewares/channel.middleware.js";
 import { leaderRoleOnly } from "../../../middlewares/rol.middleware.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { generateAndSaveProfileImage } from "../../../utils/image-generator.js";
-import fetch from "node-fetch"; // Para realizar solicitudes a la PokéAPI
+import fetch from "node-fetch"; 
 
 const cooldowns = new Map(); 
-
-const leaderPhrases = [
-  "¡El líder se impone! 👑",
-  "¡El líder pone orden! 🔥",
-  "¡Dome líder dome! 🗣️",
-  "Gimnasio protegido 🏰",
-  "¡Uff, por poco y pierde el líder! 😅",
-  "¡El líder está en su prime! 🐐",
-];
-
-const challengerPhrases = [
-  "Mi abuelo siempre me decía: ojito con este aspirante... 😱",
-  "¡Tremendo tryhard ese retador! 🐐",
-  "¡El retador está a un paso de convertirse en leyenda... o de que lo bloqueen por suertudo! 🎲",  
-  "¡El líder no vio venir ese ataque sorpresa! 🥷",
-  "¡Bien hecho joven aspirante! 🥋",
-  "¡El retador está a un paso de convertirse en leyenda! 🌟",
-];
 
 const data = new SlashCommandBuilder()
   .setName("set-badge")
@@ -56,7 +38,7 @@ async function execute(interaction) {
   const now = Date.now();
   const cooldown = cooldowns.get(leaderId);
 
-  if (cooldown && now - cooldown < 10000) {
+  if (cooldown && now - cooldown < 60000) {
     // 60000 ms = 1 minuto
     const remainingTime = Math.ceil((60000 - (now - cooldown)) / 1000);
     await interaction.followUp(
@@ -108,16 +90,8 @@ async function execute(interaction) {
     // Actualizar el marcador del Bo3
     if (result === "win") {
       bo3.leaderWins += 1;
-      const randomPhrase = leaderPhrases[Math.floor(Math.random() * leaderPhrases.length)];
-      await interaction.followUp(
-        `<@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}) ${randomPhrase}`
-      );
     } else if (result === "lose") {
       bo3.challengerWins += 1;
-      const randomPhrase = challengerPhrases[Math.floor(Math.random() * challengerPhrases.length)];
-      await interaction.followUp(
-        `<@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}) ${randomPhrase}`
-      );
     }
 
     // Incrementar el contador de intentos del retador
@@ -155,7 +129,7 @@ async function execute(interaction) {
       await challenger.save();
 
       await interaction.followUp(
-        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio! Tremenda cabra. 🐐`
+        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio! Tremenda cabra 🐐.`
       );
       return;
     } else if (bo3.challengerWins === 2) {
@@ -219,7 +193,7 @@ async function execute(interaction) {
         await generateAndSaveProfileImage(recipientUser.id);
 
         await interaction.followUp(
-          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga. 🐢 ${extraMessage}`
+          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga 🐢. ${extraMessage}`
         );
       } else {
         await interaction.followUp(
@@ -232,6 +206,10 @@ async function execute(interaction) {
     // Guardar los cambios si aún no se ha decidido el Bo3
     await leader.save();
     await challenger.save();
+
+    await interaction.followUp(
+      `Marcador actualizado: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+    );
   } catch (error) {
     console.error(error);
     await interaction.followUp(error.message);
