@@ -5,7 +5,25 @@ import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { generateAndSaveProfileImage } from "../../../utils/image-generator.js";
 import fetch from "node-fetch"; // Para realizar solicitudes a la PokéAPI
 
-const cooldowns = new Map(); // Mapa para rastrear los tiempos de espera
+const cooldowns = new Map(); 
+
+const leaderPhrases = [
+  "¡El líder se impone' 👑",
+  "¡El líder pone orden! 🔥",
+  "¡Dome líder dome! 🗣️",
+  "Gimnasio protegido 🏰",
+  "¡Uff, por poco y pierde el líder! 😅",
+  "¡El líder está en su prime! 🐐",
+];
+
+const challengerPhrases = [
+  "Mi abuelo siempre me decía: ojito con este aspirante... 😱",
+  "¡Tremendo tryhard ese retador! 🐐",
+  "¡El retador está a un paso de convertirse en leyenda... o de que lo bloqueen por suertudo! 🎲",  
+  "¡El líder no vio venir ese ataque sorpresa! 🥷",
+  "¡Bien hecho joven aspirante! 🥋",
+  "¡El retador está a un paso de convertirse en leyenda! 🌟",
+];
 
 const data = new SlashCommandBuilder()
   .setName("set-badge")
@@ -90,8 +108,16 @@ async function execute(interaction) {
     // Actualizar el marcador del Bo3
     if (result === "win") {
       bo3.leaderWins += 1;
+      const randomPhrase = leaderPhrases[Math.floor(Math.random() * leaderPhrases.length)];
+      await interaction.followUp(
+        `${randomPhrase}: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+      );
     } else if (result === "lose") {
       bo3.challengerWins += 1;
+      const randomPhrase = challengerPhrases[Math.floor(Math.random() * challengerPhrases.length)];
+      await interaction.followUp(
+        `${randomPhrase} <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+      );
     }
 
     // Incrementar el contador de intentos del retador
@@ -110,6 +136,7 @@ async function execute(interaction) {
       await interaction.followUp(
         `¡El marcador está empatado! <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}). ¡La próxima batalla será decisiva! 🔥`
       );
+      return;
     }
 
     // Verificar si alguien ganó el Bo3
@@ -205,10 +232,6 @@ async function execute(interaction) {
     // Guardar los cambios si aún no se ha decidido el Bo3
     await leader.save();
     await challenger.save();
-
-    await interaction.followUp(
-      `Marcador actualizado: <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
-    );
   } catch (error) {
     console.error(error);
     await interaction.followUp(error.message);
