@@ -105,14 +105,6 @@ async function execute(interaction) {
     // Indicar que bo3Progress fue modificado
     challenger.markModified("bo3Progress");
 
-    // Verificar si el marcador está empatado
-    if (bo3.leaderWins === bo3.challengerWins && bo3.leaderWins > 0) {
-      await interaction.followUp(
-        `¡El marcador está empatado! <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}). ¡La próxima batalla será decisiva! 🔥`
-      );
-      return;
-    }
-
     // Verificar si alguien ganó el Bo3
     if (bo3.leaderWins === 2) {
       // El líder gana el Bo3
