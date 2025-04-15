@@ -56,7 +56,7 @@ async function execute(interaction) {
   const now = Date.now();
   const cooldown = cooldowns.get(leaderId);
 
-  if (cooldown && now - cooldown < 60000) {
+  if (cooldown && now - cooldown < 10000) {
     // 60000 ms = 1 minuto
     const remainingTime = Math.ceil((60000 - (now - cooldown)) / 1000);
     await interaction.followUp(
@@ -110,13 +110,13 @@ async function execute(interaction) {
       bo3.leaderWins += 1;
       const randomPhrase = leaderPhrases[Math.floor(Math.random() * leaderPhrases.length)];
       await interaction.followUp(
-        `${randomPhrase} <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+        `<@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}) ${randomPhrase}`
       );
     } else if (result === "lose") {
       bo3.challengerWins += 1;
       const randomPhrase = challengerPhrases[Math.floor(Math.random() * challengerPhrases.length)];
       await interaction.followUp(
-        `${randomPhrase} <@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}).`
+        `<@${leaderId}> (${bo3.leaderWins}) - <@${recipientUser.id}> (${bo3.challengerWins}) ${randomPhrase}`
       );
     }
 
@@ -155,7 +155,7 @@ async function execute(interaction) {
       await challenger.save();
 
       await interaction.followUp(
-        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio! Tremenda cabra 🐐.`
+        `¡<@${leaderId}> ha ganado el Bo3 contra <@${recipientUser.id}> y ha defendido su gimnasio! Tremenda cabra. 🐐`
       );
       return;
     } else if (bo3.challengerWins === 2) {
@@ -219,7 +219,7 @@ async function execute(interaction) {
         await generateAndSaveProfileImage(recipientUser.id);
 
         await interaction.followUp(
-          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga 🐢. ${extraMessage}`
+          `¡<@${recipientUser.id}> ha ganado el Bo3 contra <@${leaderId}> y ha obtenido la medalla **${leader.badgeName}**! Un paso más para ser campeón de liga. 🐢 ${extraMessage}`
         );
       } else {
         await interaction.followUp(
