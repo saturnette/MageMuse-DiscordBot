@@ -3,6 +3,40 @@ import axios from "axios";
 import User from "../../models/user.model.js";
 import { lobbyChannelOnly } from "../../middlewares/channel.middleware.js";
 
+// Función para calcular la distancia de Levenshtein
+function levenshteinDistance(a, b) {
+  const matrix = Array.from({ length: a.length + 1 }, () =>
+    Array(b.length + 1).fill(0)
+  );
+
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1, // Eliminación
+        matrix[i][j - 1] + 1, // Inserción
+        matrix[i - 1][j - 1] + cost // Sustitución
+      );
+    }
+  }
+
+  return matrix[a.length][b.length];
+}
+
+// Función para encontrar las mejores sugerencias
+function getSuggestions(input, allPokemon, limit = 5) {
+  const scored = allPokemon.map((name) => ({
+    name,
+    score: levenshteinDistance(input, name),
+  }));
+
+  scored.sort((a, b) => a.score - b.score); // Ordenar por menor distancia
+  return scored.slice(0, limit).map((entry) => entry.name);
+}
+
 const data = new SlashCommandBuilder()
   .setName("set-pokemon")
   .setDescription("¡Añade un Pokémon a tu equipo!")
@@ -35,12 +69,12 @@ async function execute(interaction) {
     try {
       const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1000");
       const allPokemon = response.data.results.map((p) => p.name);
-      const suggestions = allPokemon.filter((name) =>
-        name.startsWith(newPokemon.slice(0, 2)) // Buscar nombres que comiencen con las mismas letras
-      );
+
+      // Obtener sugerencias basadas en similitud
+      const suggestions = getSuggestions(newPokemon, allPokemon);
 
       const suggestionMessage = suggestions.length
-        ? `¿Quizás quisiste decir: ${suggestions.slice(0, 5).join(", ")}?`
+        ? `¿Quizás quisiste decir: ${suggestions.join(", ")}? :thinking:`
         : "No se encontraron sugerencias.";
 
       await interaction.reply(`El Pokémon ${newPokemon} no existe. ${suggestionMessage}`);
