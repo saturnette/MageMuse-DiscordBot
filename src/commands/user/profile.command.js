@@ -56,7 +56,7 @@ async function execute(interaction) {
     .addFields(
       {
         name: " ",
-        value: `**👑 Champions User:** ${userProfile.pokemonChampionsNick || "N/A"}\n**🔑 Champions code:** ${userProfile.pokemonChampionsFriendCode || "N/A"}`,
+        value: `**👑 Champions User:** ${userProfile.pokemonChampionsNick || "N/A"}\n**📌 Champions Code:** ${userProfile.pokemonChampionsFriendCode || "N/A"}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
