@@ -45,8 +45,6 @@ async function execute(interaction) {
     embedColor = 0xffbf00;
   }
 
-  const profileLink = `https://palette-dex.vercel.app/profile/${user.id}`;
-
   const exampleEmbed = new EmbedBuilder()
     .setColor(embedColor)
     .setTitle(`${user.globalName || user.username} (${user.username})`)
@@ -58,14 +56,7 @@ async function execute(interaction) {
     .addFields(
       {
         name: " ",
-        value: `**🎯 Showdown:** ${userProfile.showdownNick || "N/A"}\n**💰 Pokécoins:** ${userProfile.coins || 0}\n**🦄 Compañero:** ${
-          userProfile.companionPokemon ? userProfile.companionPokemon.name : "N/A"
-        }\n**🎨 Color Favorito:** ${
-          userProfile.favoriteColor
-            ? userProfile.favoriteColor.charAt(0).toUpperCase() +
-              userProfile.favoriteColor.slice(1)
-            : "N/A"
-        }`,
+        value: `**👑 Champions User:** ${userProfile.pokemonChampionsNick || "N/A"}\n**🔑 Champions code:** ${userProfile.pokemonChampionsFriendCode || "N/A"}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B" },
@@ -88,12 +79,6 @@ async function execute(interaction) {
               )
         }%`,
         inline: true,
-      },
-      { name: "\u200B", value: "Usa el comando **/badges** para ver tu medallero." },
-      {
-        name: "🔗 Perfil",
-        value: `[Mira todos tus pokémon haciendo click aquí](${profileLink})`,
-        inline: false,
       }
     )
     .setTimestamp();

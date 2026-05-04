@@ -9,6 +9,8 @@ const pokemonSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   _id: String,
   showdownNick: String,
+  pokemonChampionsNick: String,
+  pokemonChampionsFriendCode: String,
   badgeType: String,
   badgeName: String,
   team: [String],
