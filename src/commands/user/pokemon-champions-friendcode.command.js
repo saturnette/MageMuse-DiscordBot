@@ -9,13 +9,25 @@ const data = new SlashCommandBuilder()
   .addStringOption((option) =>
     option
       .setName("friendcode")
-      .setDescription("Tu código de amigo de Pokemon Champions")
+      .setDescription("Tu código de amigo (formato: 1234-5678-9012)")
+      .setMinLength(14)
+      .setMaxLength(14)
       .setRequired(true)
   );
 
 async function execute(interaction) {
   const user = interaction.user;
   const friendCode = interaction.options.getString("friendcode");
+
+  // Validar formato: xxxx-xxxx-xxxx donde x son números
+  const friendCodeRegex = /^\d{4}-\d{4}-\d{4}$/;
+  if (!friendCodeRegex.test(friendCode)) {
+    await interaction.reply({
+      content: "El código de amigo debe tener el formato: 1234-5678-9012 (números solo)",
+      ephemeral: true,
+    });
+    return;
+  }
 
   try {
     // Buscar al usuario en la base de datos
